@@ -1,0 +1,40 @@
+---
+sidebar: sidebar 
+permalink: trident-reference/ports.html 
+keywords: astra trident, port, ports 
+summary: Trident が通信するポートの詳細をご確認ください。 
+---
+= Astra Trident ポート
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Tridentが通信に使用するポートの詳細をご確認ください。
+
+
+
+== Astra Trident ポート
+
+Astra Trident は次のポート経由で通信：
+
+[cols="2,4"]
+|===
+| ポート | 目的 
+
+
+| 8443 | バックチャネル HTTPS 
+
+
+| 8001 | Prometheus 指標エンドポイント 
+
+
+| 8000 | Trident REST サーバ 
+
+
+| 17546 | Trident デミ作用 / レディネスプローブポートは、 Trident デミ作用ポッドで使用されます 
+|===
+
+NOTE: Liveness/Readinessプローブポートは、フラグを使用してインストール中に変更できます `--probe-port`。このポートがワーカーノード上の別のプロセスで使用されていないことを確認することが重要です。

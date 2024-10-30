@@ -1,0 +1,59 @@
+---
+indexpage:
+  lead: Astra Trident は、ネットアップが管理しているオープンソースのストレージプロビジョニングおよびオーケストレーションツールです。このコンテナを使用すると、
+    Docker と Kubernetes で管理されるコンテナ化アプリケーション用のストレージボリュームを作成できます。
+  tiles:
+  - title: リリースノート
+    links:
+    - title: 新機能
+      url: trident-rn.html
+    - title: 以前のバージョン
+      url: "/earlier-versions.html"
+  - title: 開始する
+    links:
+    - title: Astra Trident の詳細をご確認ください
+      url: "/trident-get-started/intro.html"
+    - title: 要件
+      url: "/trident-get-started/requirements.html"
+    - title: クイックスタート
+      url: "/trident-get-started/quickstart.html"
+  - title: Astra Trident を導入
+    links:
+    - title: Trident オペレータとともに導入
+      url: "/trident-get-started/kubernetes-deploy-operator.html"
+    - title: tridentctl を使用して導入します
+      url: "/trident-get-started/kubernetes-deploy-tridentctl.html"
+    - title: Astra Trident for Docker を導入
+      url: "/trident-docker/deploy-docker.html"
+  - title: Astra Trident をアップグレード
+    links:
+    - title: Trident のオペレータにアップグレード
+      url: "/trident-managing-k8s/upgrade-operator.html"
+    - title: tridentctl を使用してアップグレードします
+      url: "/trident-managing-k8s/upgrade-tridentctl.html"
+  - title: Astra Trident を使用
+    links:
+    - title: ワーカーノードを準備します
+      url: "/trident-use/worker-node-prep.html"
+    - title: バックエンドを設定
+      url: "/trident-use/backends.html"
+    - title: ストレージクラスを管理する
+      url: "/trident-use/manage-stor-class.html"
+    - title: ボリューム操作を実行する
+      url: "/trident-use/vol-operations.html"
+  - title: デモとチュートリアル
+    links:
+    - title: Astra Trident のビデオ
+      url: https://tv.netapp.com/detail/video/5995831475001/using-trident-with-kubernetes
+  - title: ブログとコミュニティ
+    links:
+    - title: Astra ブログ
+      url: https://cloud.netapp.com/blog/topic/astra
+    - title: Astra Trident のブログ
+      url: https://netapp.io/persistent-storage-provisioner-for-kubernetes/
+    - title: Kubernetes ハブ
+      url: https://cloud.netapp.com/kubernetes-hub
+    - title: netapp.io のコマンドです
+      url: https://netapp.io/
+    - title: 切断
+      url: https://discord.gg/NetApp

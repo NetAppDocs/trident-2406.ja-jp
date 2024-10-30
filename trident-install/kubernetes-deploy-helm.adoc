@@ -1,0 +1,229 @@
+---
+sidebar: sidebar 
+permalink: trident-get-started/kubernetes-deploy-helm.html 
+keywords: deploy, astra trident, operator, helm, helm chart, configuration, values, standard, registry 
+summary: Tridentオペレータを導入し、Helmを使用してAstra Tridentをインストールできます。このプロセスでは、環境 をインストールする際に、Astra Tridentで必要なコンテナイメージがプライベートレジストリに格納されません。 
+---
+= Helm（標準モード）を使用してTridentを導入
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Tridentオペレータを導入し、Helmを使用してAstra Tridentをインストールできます。このプロセスでは、環境 をインストールする際に、Astra Tridentで必要なコンテナイメージがプライベートレジストリに格納されません。プライベートイメージレジストリがある場合は、を使用しlink:kubernetes-deploy-helm-mirror.html["オフライン導入のプロセス"]ます。
+
+
+
+== Astra Tridentに関する重要な情報24.06
+
+* Astra Tridentに関する次の重要な情報をお読みください。*
+
+.<strong> ：Trident </strong> に関する重要な情報
+[%collapsible%open]
+====
+* Astra TridentでKubernetes 1.31がサポートされるようになりました。Kubernetesをアップグレードする前にTridentをアップグレード
+* Astra Tridentでは、SAN環境でのマルチパス構成の使用が厳密に実施されます。multipath.confファイルの推奨値はです `find_multipaths: no`。
++
+マルチパス以外の構成を使用するか、multipath.confファイルにまたは `find_multipaths: smart`の値を使用する `find_multipaths: yes`と、マウントが失敗します。Tridentでは、21.07リリース以降での使用を推奨してい `find_multipaths: no`ます。
+
+
+
+====
+
+
+== Tridentオペレータを導入し、Helmを使用してAstra Tridentをインストール
+
+Tridentを使用すると、link:https://artifacthub.io/packages/helm/netapp-trident/trident-operator["Helmチャート"^]Tridentオペレータを導入し、Tridentをワンステップでインストールできます。
+
+link:../trident-get-started/kubernetes-deploy.html["インストールの概要"]インストールの前提条件を満たしていることを確認し、環境に適したインストールオプションを選択してください。
+
+.開始する前に
+あなたが必要とするlink:https://v3.helm.sh/["Helm バージョン 3"^]ことに加えてlink:../trident-get-started/kubernetes-deploy.html#before-you-deploy["導入の前提条件"]。
+
+.手順
+. Astra Trident Helmリポジトリを追加します。
++
+[listing]
+----
+helm repo add netapp-trident https://netapp.github.io/trident-helm-chart
+----
+. を使用し `helm install` 、次の例のように環境の名前を指定します `100.2404.0` 。はインストールするAstra Tridentのバージョンです。
++
+[listing]
+----
+helm install <name> netapp-trident/trident-operator --version 100.2406.0 --create-namespace --namespace <trident-namespace>
+----
++
+
+NOTE: Trident用のネームスペースをすでに作成している場合、パラメータを使用する `--create-namespace`と追加のネームスペースは作成されません。
+
+
+
+を使用して、インストールの詳細（名前、ネームスペース、グラフ、ステータス、アプリケーションのバージョンなど）を確認できます `helm list` 。 およびリビジョン番号。
+
+
+
+== インストール中に設定データを渡す
+
+インストール中に設定データを渡すには、次の 2 つの方法があります。
+
+[cols="2"]
+|===
+| オプション | 説明 
+
+
+| `--values`（または `-f`）  a| 
+オーバーライドを使用してYAMLファイルを指定します。これは複数回指定でき、右端のファイルが優先されます。
+
+
+
+| `--set`  a| 
+コマンドラインでオーバーライドを指定します。
+
+|===
+たとえば、のデフォルト値を変更するには `debug`、次のコマンドを実行し `--set` ます。はインストールするAstra Tridentのバージョンです。 `100.2406.0`
+
+[listing]
+----
+helm install <name> netapp-trident/trident-operator --version 100.2406.0  --create-namespace --namespace trident --set tridentDebug=true
+----
+
+
+== 設定オプション
+
+このテーブルと `values.yaml`Helmチャートの一部であるファイルには、キーとそのデフォルト値のリストが表示されます。
+
+[cols="1,2,1"]
+|===
+| オプション | 説明 | デフォルト 
+
+
+| `nodeSelector` | ポッド割り当てのノードラベル |  
+
+
+| `podAnnotations` | ポッドの注釈 |  
+
+
+| `deploymentAnnotations` | 配置のアノテーション |  
+
+
+| `tolerations` | ポッド割り当ての許容値 |  
+
+
+| `affinity` | ポッド割り当てのアフィニティ |  
+
+
+| `tridentControllerPluginNodeSelector` | ポッド用の追加のノードセレクタ。詳細については、を参照してください <<コントローラポッドとノードポッドについて>> 。 |  
+
+
+| `tridentControllerPluginTolerations` | ポッドに対するKubernetesの許容範囲を上書きします。詳細については、を参照してください <<コントローラポッドとノードポッドについて>> 。 |  
+
+
+| `tridentNodePluginNodeSelector` | ポッド用の追加のノードセレクタ。詳細については、を参照してください <<コントローラポッドとノードポッドについて>> 。 |  
+
+
+| `tridentNodePluginTolerations` | ポッドに対するKubernetesの許容範囲を上書きします。詳細については、を参照してください <<コントローラポッドとノードポッドについて>> 。 |  
+
+
+| `imageRegistry` | 、、 `trident`およびその他のイメージのレジストリを指定します `trident-operator`。デフォルトをそのまま使用する場合は、空のままにします。 | `""` 
+
+
+| `imagePullPolicy` | のイメージプルポリシーを設定します `trident-operator`。 | `IfNotPresent` 
+
+
+| `imagePullSecrets` | 、、 `trident`およびその他のイメージのプルシークレットを設定します `trident-operator`。 |  
+
+
+| `kubeletDir` | kubeletの内部状態のホスト位置を上書きできます。 | `"/var/lib/kubelet"` 
+
+
+| `operatorLogLevel` | Trident演算子のログレベルを、、 `debug` `info`、、 `warn`、 `error`または `fatal`に設定 `trace`できます。 | `"info"` 
+
+
+| `operatorDebug` | Tridentオペレータのログレベルをdebugに設定できます。 | `true` 
+
+
+| `operatorImage` | のイメージを完全に上書きできます `trident-operator`。 | `""` 
+
+
+| `operatorImageTag` | イメージのタグを上書きできます `trident-operator`。 | `""` 
+
+
+| `tridentIPv6` | IPv6クラスタでAstra Tridentを動作させることができます。 | `false` 
+
+
+| `tridentK8sTimeout` | ほとんどのKubernetes API処理でデフォルトの30秒タイムアウトを上書きします（0以外の場合は秒単位）。 | `0` 
+
+
+| `tridentHttpRequestTimeout` | HTTP要求のデフォルトの90秒タイムアウトを上書きします。タイムアウト時間は無制限です。 `0s`負の値は使用できません。 | `"90s"` 
+
+
+| `tridentSilenceAutosupport` | Astra Tridentの定期的なAutoSupport レポートを無効にできます。 | `false` 
+
+
+| `tridentAutosupportImageTag` | Astra Trident AutoSupport コンテナのイメージのタグを上書きできます。 | `<version>` 
+
+
+| `tridentAutosupportProxy` | Astra TridentのAutoSupport コンテナがHTTPプロキシ経由で自宅に通信できるようになります。 | `""` 
+
+
+| `tridentLogFormat` | Astra Tridentのロギング形式または `json`を設定し(`text`ます）。 | `"text"` 
+
+
+| `tridentDisableAuditLog` | Astra Trident監査ロガーを無効にします。 | `true` 
+
+
+| `tridentLogLevel` | Astra Tridentのログレベルを、、 `debug` `info`、、 `warn`、、 `error`またはに `fatal`設定できます `trace`。 | `"info"` 
+
+
+| `tridentDebug` | Astra Tridentのログレベルをに設定できます `debug`。 | `false` 
+
+
+| `tridentLogWorkflows` | 特定のAstra Tridentワークフローを有効にして、トレースロギングやログ抑制を実行できます。 | `""` 
+
+
+| `tridentLogLayers` | 特定のAstra Tridentレイヤでトレースロギングやログ抑制を有効にできます。 | `""` 
+
+
+| `tridentImage` | Astra Tridentのイメージを完全に上書きできます。 | `""` 
+
+
+| `tridentImageTag` | Astra Tridentのイメージのタグを上書きできます。 | `""` 
+
+
+| `tridentProbePort` | Kubernetesの活性/準備プローブに使用されるデフォルトポートを上書きできます。 | `""` 
+
+
+| `windows` | WindowsワーカーノードにAstra Tridentをインストールできます。 | `false` 
+
+
+| `enableForceDetach` | 強制切り離し機能を有効にできます。 | `false` 
+
+
+| `excludePodSecurityPolicy` | オペレータポッドのセキュリティポリシーを作成から除外します。 | `false` 
+
+
+| `cloudProvider` | AKSクラスタで管理IDまたはクラウドIDを使用する場合はに設定します `"Azure"`。EKSクラスタでクラウドIDを使用する場合は、「aws」に設定します。 | `""` 
+
+
+| `cloudIdentity` | AKSクラスタでクラウドIDを使用する場合は、ワークロードID（「azure.workload.identity/client-id：xxxxxxxxxx-xxxx-xxxxxxx」）に設定します。EKSクラスタでクラウドIDを使用する場合は、AWS IAMロール（「eks.amazonaws.com/role-arn: arn：aws：iam：：123456：role/astratrident-role」）に設定されます。 | `""` 
+
+
+| `iscsiSelfHealingInterval` | iSCSIの自己修復が実行される間隔。 | `5m0s` 
+
+
+| `iscsiSelfHealingWaitTime` | iSCSIの自己修復が、ログアウトとその後のログインを実行して古いセッションの解決を開始するまでの時間。 | `7m0s` 
+|===
+
+
+=== コントローラポッドとノードポッドについて
+
+Astra Tridentは、単一のコントローラポッドと、クラスタ内の各ワーカーノード上のノードポッドとして実行されます。Astra Tridentボリュームをマウントするすべてのホストでノードポッドが実行されている必要があります。
+
+Kuberneteslink:https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/["ノードセレクタ"^]を使用して、link:https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/["寛容さと汚れ"^]ポッドを特定のノードまたは優先ノードで実行するように制限します。「ControllerPlugin」とを使用して、 `NodePlugin`制約とオーバーライドを指定できます。
+
+* コントローラプラグインは、Snapshotやサイズ変更などのボリュームのプロビジョニングと管理を処理します。
+* ノードプラグインによって、ノードへのストレージの接続が処理されます。
+

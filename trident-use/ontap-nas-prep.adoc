@@ -1,0 +1,364 @@
+---
+sidebar: sidebar 
+permalink: trident-use/ontap-nas-prep.html 
+keywords: trident backend, ontap nas, ontap-nas, ontap-nas-economy, ontap-nas-flexgroups 
+summary: ONTAP NASドライバでONTAPバックエンドを設定するための要件、認証オプション、およびエクスポートポリシーを理解します。 
+---
+= ONTAP NASドライバを使用してバックエンドを設定する準備をします
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP NASドライバでONTAPバックエンドを設定するための要件、認証オプション、およびエクスポートポリシーを理解します。
+
+
+
+== 要件
+
+* ONTAP バックエンドすべてに対して、 Astra Trident が SVM に少なくとも 1 つのアグリゲートを割り当てておく必要があります。
+* 複数のドライバを実行し、どちらか一方を参照するストレージクラスを作成できます。たとえば、ドライバを使用するGoldクラスと、ドライバを使用するBronzeクラスを `ontap-nas-economy`設定できます `ontap-nas`。
+* すべてのKubernetesワーカーノードに適切なNFSツールをインストールしておく必要があります。link:worker-node-prep.html["ここをクリック"]詳細については、を参照してください。
+* Astra Tridentは、Windowsノードで実行されているポッドにマウントされたSMBボリュームのみをサポート詳細については、を参照してください <<SMBボリュームをプロビジョニングする準備をします>> 。
+
+
+
+
+== ONTAPバックエンドの認証
+
+Astra Trident には、 ONTAP バックエンドを認証する 2 つのモードがあります。
+
+* Credential-based：このモードでは、ONTAPバックエンドに十分な権限が必要です。ONTAPのバージョンと最大限の互換性を確保するために、や `vsadmin`などの事前定義されたセキュリティログインロールに関連付けられたアカウントを使用することを推奨します `admin`。
+* Certificate-based：Astra TridentがONTAPクラスタと通信するためには、バックエンドに証明書がインストールされている必要があります。この場合、バックエンド定義には、 Base64 でエンコードされたクライアント証明書、キー、および信頼された CA 証明書（推奨）が含まれている必要があります。
+
+
+既存のバックエンドを更新して、クレデンシャルベースの方式と証明書ベースの方式を切り替えることができます。ただし、一度にサポートされる認証方法は1つだけです。別の認証方式に切り替えるには、バックエンド設定から既存の方式を削除する必要があります。
+
+
+WARNING: クレデンシャルと証明書の両方を*指定しようとすると、バックエンドの作成が失敗し、構成ファイルに複数の認証方法が指定されているというエラーが表示されます。
+
+
+
+=== クレデンシャルベースの認証を有効にします
+
+Trident が ONTAP バックエンドと通信するには、 SVM を対象とした管理者またはクラスタを対象とした管理者のクレデンシャルが必要です。や `vsadmin`などの事前定義された標準のロールを使用することを推奨します `admin`。これにより、今後のリリースの ONTAP との互換性が今後のリリースの Astra Trident で使用される機能 API が公開される可能性があります。カスタムのセキュリティログインロールは Astra Trident で作成して使用できますが、推奨されません。
+
+バックエンド定義の例は次のようになります。
+
+[role="tabbed-block"]
+====
+.YAML
+--
+[listing]
+----
+---
+version: 1
+backendName: ExampleBackend
+storageDriverName: ontap-nas
+managementLIF: 10.0.0.1
+dataLIF: 10.0.0.2
+svm: svm_nfs
+username: vsadmin
+password: password
+----
+--
+.JSON
+--
+[listing]
+----
+{
+  "version": 1,
+  "backendName": "ExampleBackend",
+  "storageDriverName": "ontap-nas",
+  "managementLIF": "10.0.0.1",
+  "dataLIF": "10.0.0.2",
+  "svm": "svm_nfs",
+  "username": "vsadmin",
+  "password": "password"
+}
+----
+--
+====
+バックエンド定義は、クレデンシャルがプレーンテキストで保存される唯一の場所であることに注意してください。バックエンドが作成されると、ユーザ名とパスワードが Base64 でエンコードされ、 Kubernetes シークレットとして格納されます。クレデンシャルの知識が必要なのは、バックエンドの作成と更新だけです。この処理は管理者専用で、 Kubernetes / ストレージ管理者が実行します。
+
+
+
+=== 証明書ベースの認証を有効にします
+
+新規または既存のバックエンドは証明書を使用して ONTAP バックエンドと通信できます。バックエンド定義には 3 つのパラメータが必要です。
+
+* clientCertificate ： Base64 でエンコードされたクライアント証明書の値。
+* clientPrivateKey ： Base64 でエンコードされた、関連付けられた秘密鍵の値。
+* trustedCACertifate: 信頼された CA 証明書の Base64 エンコード値。信頼された CA を使用する場合は、このパラメータを指定する必要があります。信頼された CA が使用されていない場合は無視してかまいません。
+
+
+一般的なワークフローは次の手順で構成されます。
+
+.手順
+. クライアント証明書とキーを生成します。生成時に、 ONTAP ユーザとして認証するように Common Name （ CN ；共通名）を設定します。
++
+[listing]
+----
+openssl req -x509 -nodes -days 1095 -newkey rsa:2048 -keyout k8senv.key -out k8senv.pem -subj "/C=US/ST=NC/L=RTP/O=NetApp/CN=vsadmin"
+----
+. 信頼された CA 証明書を ONTAP クラスタに追加します。この処理は、ストレージ管理者がすでに行っている可能性があります。信頼できる CA が使用されていない場合は無視します。
++
+[listing]
+----
+security certificate install -type server -cert-name <trusted-ca-cert-name> -vserver <vserver-name>
+ssl modify -vserver <vserver-name> -server-enabled true -client-enabled true -common-name <common-name> -serial <SN-from-trusted-CA-cert> -ca <cert-authority>
+----
+. ONTAP クラスタにクライアント証明書とキーをインストールします（手順 1 ）。
++
+[listing]
+----
+security certificate install -type client-ca -cert-name <certificate-name> -vserver <vserver-name>
+security ssl modify -vserver <vserver-name> -client-enabled true
+----
+. ONTAPのセキュリティログインロールが認証方式をサポートしていることを確認します `cert`。
++
+[listing]
+----
+security login create -user-or-group-name vsadmin -application ontapi -authentication-method cert -vserver <vserver-name>
+security login create -user-or-group-name vsadmin -application http -authentication-method cert -vserver <vserver-name>
+----
+. 生成された証明書を使用して認証をテストONTAP 管理 LIF > と <vserver name> は、管理 LIF の IP アドレスおよび SVM 名に置き換えてください。LIFのサービスポリシーがに設定されていることを確認する必要があり `default-data-management`ます。
++
+[listing]
+----
+curl -X POST -Lk https://<ONTAP-Management-LIF>/servlets/netapp.servlets.admin.XMLrequest_filer --key k8senv.key --cert ~/k8senv.pem -d '<?xml version="1.0" encoding="UTF-8"?><netapp xmlns="http://www.netapp.com/filer/admin" version="1.21" vfiler="<vserver-name>"><vserver-get></vserver-get></netapp>'
+----
+. Base64 で証明書、キー、および信頼された CA 証明書をエンコードする。
++
+[listing]
+----
+base64 -w 0 k8senv.pem >> cert_base64
+base64 -w 0 k8senv.key >> key_base64
+base64 -w 0 trustedca.pem >> trustedca_base64
+----
+. 前の手順で得た値を使用してバックエンドを作成します。
++
+[listing]
+----
+cat cert-backend-updated.json
+{
+"version": 1,
+"storageDriverName": "ontap-nas",
+"backendName": "NasBackend",
+"managementLIF": "1.2.3.4",
+"dataLIF": "1.2.3.8",
+"svm": "vserver_test",
+"clientCertificate": "Faaaakkkkeeee...Vaaalllluuuueeee",
+"clientPrivateKey": "LS0tFaKE...0VaLuES0tLS0K",
+"storagePrefix": "myPrefix_"
+}
+
+#Update backend with tridentctl
+tridentctl update backend NasBackend -f cert-backend-updated.json -n trident
++------------+----------------+--------------------------------------+--------+---------+
+|    NAME    | STORAGE DRIVER |                 UUID                 | STATE  | VOLUMES |
++------------+----------------+--------------------------------------+--------+---------+
+| NasBackend | ontap-nas      | 98e19b74-aec7-4a3d-8dcf-128e5033b214 | online |       9 |
++------------+----------------+--------------------------------------+--------+---------+
+----
+
+
+
+
+=== 認証方法を更新するか、クレデンシャルをローテーションして
+
+既存のバックエンドを更新して、別の認証方法を使用したり、クレデンシャルをローテーションしたりできます。これはどちらの方法でも機能します。ユーザ名とパスワードを使用するバックエンドは証明書を使用するように更新できますが、証明書を使用するバックエンドはユーザ名とパスワードに基づいて更新できます。これを行うには、既存の認証方法を削除して、新しい認証方法を追加する必要があります。次に、実行に必要なパラメータを含む更新されたbackend.jsonファイルを使用し `tridentctl update backend`ます。
+
+[listing]
+----
+cat cert-backend-updated.json
+{
+"version": 1,
+"storageDriverName": "ontap-nas",
+"backendName": "NasBackend",
+"managementLIF": "1.2.3.4",
+"dataLIF": "1.2.3.8",
+"svm": "vserver_test",
+"username": "vsadmin",
+"password": "password",
+"storagePrefix": "myPrefix_"
+}
+
+#Update backend with tridentctl
+tridentctl update backend NasBackend -f cert-backend-updated.json -n trident
++------------+----------------+--------------------------------------+--------+---------+
+|    NAME    | STORAGE DRIVER |                 UUID                 | STATE  | VOLUMES |
++------------+----------------+--------------------------------------+--------+---------+
+| NasBackend | ontap-nas      | 98e19b74-aec7-4a3d-8dcf-128e5033b214 | online |       9 |
++------------+----------------+--------------------------------------+--------+---------+
+----
+
+NOTE: パスワードのローテーションを実行する際には、ストレージ管理者が最初に ONTAP でユーザのパスワードを更新する必要があります。この後にバックエンドアップデートが続きます。証明書のローテーションを実行する際に、複数の証明書をユーザに追加することができます。その後、バックエンドが更新されて新しい証明書が使用されるようになります。この証明書に続く古い証明書は、 ONTAP クラスタから削除できます。
+
+バックエンドを更新しても、すでに作成されているボリュームへのアクセスは中断されず、その後のボリューム接続にも影響しません。バックエンドの更新が成功した場合、 Astra Trident が ONTAP バックエンドと通信し、以降のボリューム処理を処理できることを示しています。
+
+
+
+== NFS エクスポートポリシーを管理します
+
+Astra Trident は、 NFS エクスポートポリシーを使用して、プロビジョニングするボリュームへのアクセスを制御します。
+
+Astra Trident には、エクスポートポリシーを使用する際に次の 2 つのオプションがあります。
+
+* Astra Trident は、エクスポートポリシー自体を動的に管理できます。このモードでは、許容可能な IP アドレスを表す CIDR ブロックのリストをストレージ管理者が指定します。Astra Trident は、この範囲に含まれるノード IP をエクスポートポリシーに自動的に追加します。または、 CIDRs が指定されていない場合は、ノード上で検出されたグローバルスコープのユニキャスト IP がエクスポートポリシーに追加されます。
+* ストレージ管理者は、エクスポートポリシーを作成したり、ルールを手動で追加したりできます。構成に別のエクスポートポリシー名を指定しないと、 Astra Trident はデフォルトのエクスポートポリシーを使用します。
+
+
+
+
+=== エクスポートポリシーを動的に管理
+
+Astra Tridentでは、ONTAPバックエンドのエクスポートポリシーを動的に管理できます。これにより、ストレージ管理者は、明示的なルールを手動で定義するのではなく、ワーカーノードの IP で許容されるアドレススペースを指定できます。エクスポートポリシーの管理が大幅に簡易化され、エクスポートポリシーを変更しても、ストレージクラスタに対する手動の操作は不要になります。さらに、この方法を使用すると、ストレージクラスタへのアクセスを指定した範囲内のIPを持つワーカーノードだけに制限できるため、きめ細かい管理が可能になります。
+
+
+NOTE: ダイナミックエクスポートポリシーを使用する場合は、Network Address Translation（NAT;ネットワークアドレス変換）を使用しないでください。NATを使用すると、ストレージコントローラは実際のIPホストアドレスではなくフロントエンドのNATアドレスを認識するため、エクスポートルールに一致しない場合はアクセスが拒否されます。
+
+
+
+==== 例
+
+2 つの設定オプションを使用する必要があります。バックエンド定義の例を次に示します。
+
+[listing]
+----
+---
+version: 1
+storageDriverName: ontap-nas
+backendName: ontap_nas_auto_export
+managementLIF: 192.168.0.135
+svm: svm1
+username: vsadmin
+password: password
+autoExportCIDRs:
+- 192.168.0.0/24
+autoExportPolicy: true
+----
+
+NOTE: この機能を使用する場合は、SVMのルートジャンクションに、ノードのCIDRブロックを許可するエクスポートルール（デフォルトのエクスポートポリシーなど）を含む事前に作成したエクスポートポリシーがあることを確認する必要があります。NetAppが推奨するベストプラクティスに従って、1つのSVMをAstra Trident専用にする。
+
+ここでは、上記の例を使用してこの機能がどのように動作するかについて説明します。
+
+*  `autoExportPolicy`がに設定されてい `true`ます。これは、Astra TridentがSVM用のエクスポートポリシーを作成し、アドレスブロックを使用してルールの追加と削除を処理する `autoExportCIDRs`ことを示します `svm1`。たとえば、UUIDが403b5326-8482-40dB-96d0-d83fb3f4daecのバックエンドをに設定する `true`と `autoExportPolicy`、という名前のエクスポートポリシーがSVMに作成されます `trident-403b5326-8482-40db-96d0-d83fb3f4daec`。
+* `autoExportCIDRs`アドレスブロックのリストが含まれます。このフィールドは省略可能で、デフォルト値は ["0.0.0.0/0" 、 "::/0" です。定義されていない場合は、 Astra Trident が、ワーカーノードで検出されたすべてのグローバルにスコープ指定されたユニキャストアドレスを追加します。
+
+
+この例では `192.168.0.0/24`、アドレス空間が提供されています。このアドレス範囲に含まれる Kubernetes ノードの IP が、 Astra Trident が作成するエクスポートポリシーに追加されることを示します。Astra Tridentは、実行先のノードを登録すると、ノードのIPアドレスを取得してに表示されるアドレスブロックと照合し `autoExportCIDRs`ます。IPをフィルタリングしたあと、Astra Tridentは、検出したクライアントIP用のエクスポートポリシールールを作成します。このルールには、特定したノードごとに1つのルールが含まれています。
+
+バックエンドを作成した後で、バックエンドのおよびを `autoExportCIDRs`更新できます `autoExportPolicy`。自動的に管理されるバックエンドに新しい CIDRs を追加したり、既存の CIDRs を削除したりできます。CIDRs を削除する際は、既存の接続が切断されないように注意してください。バックエンドに対して無効にして、手動で作成したエクスポートポリシーにフォールバックすることもできます `autoExportPolicy`。この場合、バックエンド設定でパラメータを設定する必要があります `exportPolicy`。
+
+Astra Tridentでバックエンドが作成または更新されたら、または対応する `tridentbackend`CRDを使用してバックエンドを確認でき `tridentctl`ます。
+
+[listing]
+----
+./tridentctl get backends ontap_nas_auto_export -n trident -o yaml
+items:
+- backendUUID: 403b5326-8482-40db-96d0-d83fb3f4daec
+  config:
+    aggregate: ""
+    autoExportCIDRs:
+    - 192.168.0.0/24
+    autoExportPolicy: true
+    backendName: ontap_nas_auto_export
+    chapInitiatorSecret: ""
+    chapTargetInitiatorSecret: ""
+    chapTargetUsername: ""
+    chapUsername: ""
+    dataLIF: 192.168.0.135
+    debug: false
+    debugTraceFlags: null
+    defaults:
+      encryption: "false"
+      exportPolicy: <automatic>
+      fileSystemType: ext4
+----
+Kubernetesクラスタにノードを追加してAstra Tridentコントローラに登録すると、既存のバックエンドのエクスポートポリシーが更新されます（バックエンドのに指定されたアドレス範囲に該当する場合 `autoExportCIDRs`）。
+
+ノードを削除すると、 Astra Trident はオンラインのすべてのバックエンドをチェックして、そのノードのアクセスルールを削除します。管理対象のバックエンドのエクスポートポリシーからこのノード IP を削除することで、 Astra Trident は、この IP がクラスタ内の新しいノードによって再利用されないかぎり、不正なマウントを防止します。
+
+既存のバックエンドがある場合は、を使用してバックエンドを更新する `tridentctl update backend`と、Astra Tridentがエクスポートポリシーを自動的に管理するようになります。これにより、バックエンドのUUIDに基づいてという名前の新しいエクスポートポリシーが作成され、バックエンドにあるボリュームは再マウント時に新しく作成されたエクスポートポリシーを使用します。
+
+
+NOTE: 自動管理されたエクスポートポリシーを使用してバックエンドを削除すると、動的に作成されたエクスポートポリシーが削除されます。バックエンドが再作成されると、そのバックエンドは新しいバックエンドとして扱われ、新しいエクスポートポリシーが作成されます。
+
+ライブノードの IP アドレスが更新された場合は、ノード上の Astra Trident ポッドを再起動する必要があります。Trident が管理するバックエンドのエクスポートポリシーを更新して、この IP の変更を反映させます。
+
+
+
+== SMBボリュームをプロビジョニングする準備をします
+
+少し準備をするだけで、ドライバを使用してSMBボリュームをプロビジョニングできます `ontap-nas`。
+
+
+WARNING: オンプレミスのONTAP用のSMBボリュームを作成するには、SVMでNFSプロトコルとSMB / CIFSプロトコルの両方を設定する必要があります `ontap-nas-economy`。これらのプロトコルのいずれかを設定しないと、原因 SMBボリュームの作成が失敗します。
+
+.開始する前に
+SMBボリュームをプロビジョニングする前に、以下を準備しておく必要があります。
+
+* Linuxコントローラノードと少なくとも1つのWindowsワーカーノードでWindows Server 2022を実行しているKubernetesクラスタ。Astra Tridentは、Windowsノードで実行されているポッドにマウントされたSMBボリュームのみをサポート
+* Active Directoryのクレデンシャルを含むAstra Tridentのシークレットが少なくとも1つ必要です。シークレットを生成するには `smbcreds`：
++
+[listing]
+----
+kubectl create secret generic smbcreds --from-literal username=user --from-literal password='password'
+----
+* Windowsサービスとして設定されたCSIプロキシ。を設定するには `csi-proxy`、Windowsで実行されているKubernetesノードについて、またはをlink:https://github.com/Azure/aks-engine/blob/master/docs/topics/csi-proxy-windows.md["GitHub: Windows向けCSIプロキシ"^]参照してくださいlink:https://github.com/kubernetes-csi/csi-proxy["GitHub: CSIプロキシ"^]。
+
+
+.手順
+. オンプレミスのONTAPの場合は、必要に応じてSMB共有を作成するか、Astra TridentでSMB共有を作成できます。
++
+
+NOTE: Amazon FSx for ONTAPにはSMB共有が必要です。
+
++
+SMB管理共有は、共有フォルダスナップインを使用するか、ONTAP CLIを使用して作成できますlink:https://learn.microsoft.com/en-us/troubleshoot/windows-server/system-management-components/what-is-microsoft-management-console["Microsoft管理コンソール"^]。ONTAP CLIを使用してSMB共有を作成するには、次の手順を実行します
+
++
+.. 必要に応じて、共有のディレクトリパス構造を作成します。
++
+コマンドは `vserver cifs share create`、共有の作成時に-pathオプションで指定されたパスをチェックします。指定したパスが存在しない場合、コマンドは失敗します。
+
+.. 指定したSVMに関連付けられているSMB共有を作成します。
++
+[listing]
+----
+vserver cifs share create -vserver vserver_name -share-name share_name -path path [-share-properties share_properties,...] [other_attributes] [-comment text]
+----
+.. 共有が作成されたことを確認します。
++
+[listing]
+----
+vserver cifs share show -share-name share_name
+----
++
+
+NOTE: 詳細については、を参照してlink:https://docs.netapp.com/us-en/ontap/smb-config/create-share-task.html["SMB共有を作成する"^]ください。
+
+
+
+. バックエンドを作成する際に、SMBボリュームを指定するように次の項目を設定する必要があります。FSx for ONTAPのバックエンド構成オプションについては、を参照してくださいlink:trident-fsx-examples.html["FSX（ONTAP の構成オプションと例）"]。
++
+[cols="1,2,1"]
+|===
+| パラメータ | 説明 | 例 
+
+
+| `smbShare` | Microsoft管理コンソールまたはONTAP CLIを使用して作成されたSMB共有の名前、Astra TridentでSMB共有を作成できる名前、ボリュームへの共有アクセスを禁止する場合はパラメータを空白のままにすることができます。オンプレミスのONTAPでは、このパラメータはオプションです。このパラメータはAmazon FSx for ONTAPバックエンドで必須であり、空にすることはできません。 | `smb-share` 
+
+
+| `nasType` | *に設定する必要があります `smb`。*nullの場合、デフォルトはになります `nfs`。 | `smb` 
+
+
+| `securityStyle` | 新しいボリュームのセキュリティ形式。* SMBボリュームの場合はまたは `mixed`に設定する必要があります `ntfs`。* | `ntfs`SMBボリュームの場合はまたは `mixed` 
+
+
+| `unixPermissions` | 新しいボリュームのモード。* SMBボリュームは空にしておく必要があります。* | "" 
+|===
+

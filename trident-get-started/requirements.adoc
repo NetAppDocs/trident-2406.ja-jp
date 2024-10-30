@@ -1,0 +1,206 @@
+---
+sidebar: sidebar 
+permalink: trident-get-started/requirements.html 
+keywords: trident requirements, supported front ends, supported backends, kubernetes cluster, cluster requirements, version requirements, supported versions, host configuration, host os, system configuration, host operating system, fsx, ports, csi, images, orchestrators, storage systems, feature, kubernetes 
+summary: Astra Tridentをインストールする前に、次の一般的なシステム要件を確認してください。個 々 のバックエンドには追加の要件がある場合があり 
+---
+= 要件
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Astra Tridentをインストールする前に、次の一般的なシステム要件を確認してください。個 々 のバックエンドには追加の要件がある場合があり
+
+
+
+== Astra Tridentに関する重要な情報
+
+* Astra Tridentに関する次の重要な情報をお読みください。*
+
+.<strong> ：Trident </strong> に関する重要な情報
+[%collapsible%open]
+====
+* Astra TridentでKubernetes 1.31がサポートされるようになりました。Kubernetesをアップグレードする前にAstra Tridentをアップグレードしてください。
+* Astra Tridentでは、SAN環境でのマルチパス構成の使用が厳密に実施されます。multipath.confファイルの推奨値はです `find_multipaths: no`。
++
+マルチパス以外の構成を使用するか、multipath.confファイルにまたは `find_multipaths: smart`の値を使用する `find_multipaths: yes`と、マウントが失敗します。Astra Tridentでは、2007年21.07リリースからの使用が推奨されて `find_multipaths: no`います。
+
+
+
+====
+
+
+== サポートされるフロントエンド（オーケストレーションツール）
+
+Trident Astra は、次のような複数のコンテナエンジンとオーケストレーションツールをサポート
+
+* Anthosオンプレミス（VMware）とAnthos（ベアメタル1.16）
+* Kubernetes 1.24~1.31
+* OpenShift 4.10-4.16
+
+
+Trident オペレータは、次のリリースでサポートされています。
+
+* Anthosオンプレミス（VMware）とAnthos（ベアメタル1.16）
+* Kubernetes 1.24~1.31
+* OpenShift 4.10-4.16
+
+
+Astra Tridentは、Google Kubernetes Engine（GKE）、Amazon Elastic Kubernetes Services（EKS）、Azure Kubernetes Service（AKS）、Mirantis Kubernetes Engine（MKE）、Rancher、VMware Tanzu Portfolioなど、他のフルマネージド/自己管理型Kubernetesソリューションとも連携します。
+
+Astra TridentとONTAPは、のストレージプロバイダとして使用できますlink:https://kubevirt.io/["KubeVirt"]。
+
+
+WARNING: Astra TridentがインストールされているKubernetesクラスタを1.24から1.25以降にアップグレードする前に、を参照してくださいlink:../trident-managing-k8s/upgrade-operator.html#upgrade-a-helm-installation["Helmインストールのアップグレード"]。
+
+
+
+== サポートされるバックエンド（ストレージ）
+
+Astra Trident を使用するには、次のバックエンドを 1 つ以上サポートする必要があります。
+
+* NetApp ONTAP 対応の Amazon FSX
+* Azure NetApp Files
+* Cloud Volumes ONTAP
+* Cloud Volumes Service for GCP
+* FAS/AFF / Select 9.5以降
+* ネットアップオール SAN アレイ（ ASA ）
+* NetApp HCI / Elementソフトウェア11以降
+
+
+
+
+== 機能の要件
+
+次の表は、このリリースの Astra Trident で利用できる機能と、サポートする Kubernetes のバージョンをまとめたものです。
+
+[cols="3"]
+|===
+| 機能 | Kubernetes のバージョン | フィーチャーゲートが必要ですか？ 
+
+
+| Astra Trident  a| 
+1.24 ~ 1.31
+ a| 
+いいえ
+
+
+
+| ボリューム Snapshot  a| 
+1.24 ~ 1.31
+ a| 
+いいえ
+
+
+
+| ボリューム Snapshot からの PVC  a| 
+1.24 ~ 1.31
+ a| 
+いいえ
+
+
+
+| iSCSI PV のサイズ変更  a| 
+1.24 ~ 1.31
+ a| 
+いいえ
+
+
+
+| ONTAP 双方向 CHAP  a| 
+1.24 ~ 1.31
+ a| 
+いいえ
+
+
+
+| 動的エクスポートポリシー  a| 
+1.24 ~ 1.31
+ a| 
+いいえ
+
+
+
+| Trident のオペレータ  a| 
+1.24 ~ 1.31
+ a| 
+いいえ
+
+
+
+| CSI トポロジ  a| 
+1.24 ~ 1.31
+ a| 
+いいえ
+
+|===
+
+
+== テスト済みのホストオペレーティングシステム
+
+Astra Tridentは特定のオペレーティングシステムを正式にサポートしていませんが、動作確認済みのものは次のとおりです。
+
+* OpenShift Container Platform（AMD64およびARM64）でサポートされているRed Hat CoreOS（RHCOS）のバージョン
+* RHEL 8+（AMD64およびARM64）
++
+
+NOTE: NVMe/TCPにはRHEL 9以降が必要です。
+
+* Ubuntu 22.04以降（AMD64およびARM64）
+* Windows Server 2022
+
+
+デフォルトでは、 Astra Trident はコンテナで実行されるため、任意の Linux ワーカーで実行されます。ただし、その場合、使用するバックエンドに応じて、標準の NFS クライアントまたは iSCSI イニシエータを使用して Astra Trident が提供するボリュームをマウントできる必要があります。
+
+この `tridentctl`ユーティリティは、これらのLinuxディストリビューションのいずれでも実行できます。
+
+
+
+== ホストの設定
+
+Kubernetesクラスタ内のすべてのワーカーノードが、ポッド用にプロビジョニングしたボリュームをマウントできる必要があります。ワーカーノードを準備するには、ドライバの選択に基づいてNFS、iSCSI、またはNVMeのツールをインストールする必要があります。
+
+link:../trident-use/worker-node-prep.html["ワーカーノードを準備します"]
+
+
+
+== ストレージシステムの構成：
+
+Astra Tridentでは、バックエンド構成でストレージシステムを使用する前に、変更が必要になる場合があります。
+
+link:../trident-use/backends.html["バックエンドを設定"]
+
+
+
+== Astra Trident ポート
+
+Astra Tridentが通信するには、特定のポートへのアクセスが必要です。
+
+link:../trident-reference/ports.html["Astra Trident ポート"]
+
+
+
+== コンテナイメージと対応する Kubernetes バージョン
+
+エアギャップのある環境では、 Astra Trident のインストールに必要なコンテナイメージを次の表に示します。コマンドを使用し `tridentctl images`て、必要なコンテナイメージのリストを確認します。
+
+[cols="2"]
+|===
+| Kubernetesのバージョン | コンテナイメージ 
+
+
+| v1.24.0、v1.25.0、v1.26.0、v1.27.0、v1.28.0、 v1.29.0、v1.30.0、v1.31.0  a| 
+* Docker .io / NetApp / Trident：24.06.0
+* docker.io / netapp/trident-autosupport：24.06
+* registry.k8s.io/sig-storage/csi-provisioner：v4.0.1
+* registry.k8s.io/sig-storage/csi-attacher：v4.6.0
+* registry.k8s.io/sig-storage/csi-resizer：v1.11.0
+* registry.k8s.io/sig-storage/csi-snapshotter：v7.0.2
+* registry.k8s.io/sig-storage/csi-node-driver-registrar：v2.10.0
+* docker.io/netapp/trident-operator：24.06.0（オプション）
+
+
+|===

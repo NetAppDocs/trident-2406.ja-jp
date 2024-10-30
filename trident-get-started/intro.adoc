@@ -1,0 +1,111 @@
+---
+sidebar: sidebar 
+permalink: trident-get-started/intro.html 
+keywords: product overview, astra trident, fsx, element, astra, google cloud, cvs, architecture, test drive, node pod, controller pod, pods, csi, sidecar 
+summary: Astra Trident は、ネットアップが Astra 製品ファミリーの一部として管理している、完全にサポートされているオープンソースプロジェクトです。Container Storage Interface（CSI）などの業界標準のインターフェイスを使用して、コンテナ化されたアプリケーションの永続性要求を満たすように設計されています。 
+---
+= Astra Trident の詳細をご確認ください
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Astra Tridentは、の一部としてNetAppが管理している、フルサポートのオープンソースプロジェクトlink:https://docs.netapp.com/us-en/astra-family/intro-family.html["Astra 製品ファミリー"^]です。Container Storage Interface（CSI）などの業界標準のインターフェイスを使用して、コンテナ化されたアプリケーションの永続性要求を満たすように設計されています。
+
+
+
+== アストラとは
+
+Astra を使用すると、 Kubernetes で実行されている大量のデータコンテナ化ワークロードを、パブリッククラウドとオンプレミスの間で簡単に管理、保護、移動できます。
+
+Astraは、Astra Tridentを基盤に構築された永続的コンテナストレージをプロビジョニング、提供します。また、Snapshot、バックアップとリストア、アクティビティログ、アクティブクローニングなどの高度なアプリケーション対応データ管理機能も提供し、データ保護、ディザスタ/データリカバリ、データ監査、Kubernetesワークロードの移行のユースケースに対応します。
+
+詳細については、をご覧ください link:https://bluexp.netapp.com/astra["Astraをご利用いただくか、無償トライアルにご登録ください"^]。
+
+
+
+== Astra Tridentとは
+
+Astra Tridentでは、パブリッククラウドやオンプレミスにあるONTAP（AFF、NetApp FAS、Select、Cloud、 Amazon FSx for NetApp ONTAP）、Elementソフトウェア（NetApp HCI、SolidFire）、Azure NetApp Filesサービス、Cloud Volumes Service on Google Cloud
+
+Astra Tridentは、とネイティブに統合される、コンテナストレージインターフェイス（CSI）準拠の動的ストレージオーケストレーションツールlink:https://kubernetes.io/["Kubernetes"^]です。Astra Tridentは、単一のコントローラポッドと、クラスタ内の各ワーカーノード上のノードポッドとして実行されます。詳細については、を参照してください link:../trident-get-started/architecture.html["Astra Tridentのアーキテクチャ"] 。
+
+Astra Tridentは、NetAppストレージプラットフォーム向けのDockerエコシステムと直接統合することもできます。NetApp Docker Volume Plugin（nDVP）は、ストレージプラットフォームからDockerホストへのストレージリソースのプロビジョニングと管理をサポートします。詳細については、を参照してください link:../trident-docker/deploy-docker.html["Astra Trident for Docker を導入"] 。
+
+
+NOTE: Kubernetesを初めて使用する場合は、について理解しておく必要がありますlink:https://kubernetes.io/docs/home/["Kubernetesの概念とツール"^]。
+
+
+
+== Astra TridentのTest Driveプログラム
+
+Test Driveプログラムを利用するには、すぐに使用できるラボイメージを使用して、「コンテナ化されたワークロード向けの永続的ストレージの簡単な導入とクローニング」へのアクセスをリクエストしてくださいlink:https://www.netapp.com/us/try-and-buy/test-drive/index.aspx["ネットアップのテスト用ドライブ"^]。このテストドライブは、3ノードのKubernetesクラスタとAstra Tridentがインストールおよび設定されたサンドボックス環境を提供します。これは、Astra Tridentについて理解を深め、その機能を確認するための優れた方法です。
+
+もう1つのオプションは、link:https://kubernetes.io/docs/setup/independent/install-kubeadm/["kubeadm インストールガイド"]Kubernetesが提供するです。
+
+
+NOTE: これらの手順を使用して構築したKubernetesクラスタは、本番環境では使用しないでください。本番環境向けクラスタ向けに、ディストリビューションから提供されている本番環境導入ガイドを使用します。
+
+
+
+== KubernetesとNetApp製品の統合
+
+NetAppのストレージ製品ポートフォリオは、Kubernetesクラスタのさまざまな要素と統合されているため、高度なデータ管理機能が提供され、Kubernetes環境の機能、機能、パフォーマンス、可用性が強化されます。
+
+.NetApp ONTAP 対応の Amazon FSX
+[%collapsible]
+====
+link:https://www.netapp.com/aws/fsx-ontap/["NetApp ONTAP 対応の Amazon FSX"^]は、NetApp ONTAPストレージオペレーティングシステムを基盤とするファイルシステムを起動して実行できる、フルマネージドのAWSサービスです。
+
+====
+.Azure NetApp Files
+[%collapsible]
+====
+https://www.netapp.com/azure/azure-netapp-files/["Azure NetApp Files"^]は、NetAppを基盤とするエンタープライズクラスのAzureファイル共有サービスです。要件がきわめて厳しいファイルベースのワークロードも、ネットアップが提供するパフォーマンスと充実のデータ管理機能を使用して、 Azure でネイティブに実行できます。
+
+====
+.Cloud Volumes ONTAP
+[%collapsible]
+====
+link:https://www.netapp.com/cloud-services/cloud-volumes-ontap/["Cloud Volumes ONTAP"^]は、クラウドでONTAPデータ管理ソフトウェアを実行するソフトウェア型のストレージアプライアンスです。
+
+====
+.Cloud Volumes Service for Google Cloud
+[%collapsible]
+====
+link:https://bluexp.netapp.com/google-cloud-netapp-volumes?utm_source=GitHub&utm_campaign=Trident["NetApp Cloud Volumes Service for Google Cloud"^]は、NFSおよびSMB経由でNASボリュームを提供するクラウドネイティブのファイルサービスで、オールフラッシュのパフォーマンスを実現します。
+
+====
+.Element ソフトウェア
+[%collapsible]
+====
+https://www.netapp.com/data-management/element-software/["要素"^]ストレージ管理者は、パフォーマンスを保証し、シンプルで合理的なストレージ設置面積を実現することで、ワークロードを統合できます。
+
+====
+.NetApp HCI
+[%collapsible]
+====
+link:https://docs.netapp.com/us-en/hci/docs/concept_hci_product_overview.html["NetApp HCI"^]日常業務を自動化し、インフラ管理者がより重要な業務に集中できるようにすることで、データセンターの管理と拡張を簡易化します。
+
+Astra Tridentでは、コンテナ化されたアプリケーション用のストレージデバイスを、基盤となるNetApp HCIストレージプラットフォームに直接プロビジョニングして管理できます。
+
+====
+.NetApp ONTAP
+[%collapsible]
+====
+link:https://docs.netapp.com/us-en/ontap/index.html["NetApp ONTAP"^]は、NetAppのマルチプロトコルユニファイドストレージオペレーティングシステムで、あらゆるアプリケーションに高度なデータ管理機能を提供します。
+
+ONTAP システムには、オールフラッシュ、ハイブリッド、オール HDD のいずれかの構成が採用されており、自社開発のハードウェア（ FAS と AFF ）、ノーブランド製品（ ONTAP Select ）、クラウドのみ（ Cloud Volumes ONTAP ）など、さまざまな導入モデルが用意されています。Astra Tridentは、これらのONTAP導入モデルをサポートしています。
+
+====
+
+
+== 詳細情報
+
+* https://docs.netapp.com/us-en/astra-family/intro-family.html["ネットアップアストラ製品ファミリー"^]
+* https://docs.netapp.com/us-en/astra/get-started/intro.html["Astra Control Service のマニュアル"^]
+* https://docs.netapp.com/us-en/astra-control-center/index.html["Astra Control Center のドキュメント"^]
+* https://docs.netapp.com/us-en/astra-automation/get-started/before_get_started.html["Astra API ドキュメント"^]
+

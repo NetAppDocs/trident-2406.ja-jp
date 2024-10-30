@@ -1,0 +1,113 @@
+---
+sidebar: sidebar 
+permalink: get-help.html 
+keywords: get help, get support, knowledgebase, discord, phone, web, ticket, contact support, support ticket 
+summary: ネットアップでは、さまざまな方法で Trident をサポートしています。ディスコード・チャネルなど、24時間365日利用可能な広範な無料セルフ・サポート・オプションをご用意しています。 
+---
+= サポート
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+NetAppは、Astra Tridentをさまざまな方法でサポートします。ナレッジベース（KB）記事やDiscordチャネルなど、24時間365日利用可能な無料のセルフサポートオプションをご用意しています。
+
+
+
+== Astra Tridentのサポートライフサイクル
+
+Astra Tridentでは、バージョンに応じて3つのレベルのサポートが提供されます。を参照してください link:https://mysupport.netapp.com/site/info/version-support["定義に対するNetAppソフトウェアバージョンのサポート"^]。
+
+フルサポート:: Astra Tridentは、リリース日から12カ月間フルサポートを提供します。
+限定サポート:: Astra Tridentでは、リリース日から13~24カ月目に限定的なサポートを提供します。
+セルフサポート:: Astra Tridentのドキュメントは、リリース日から25~36カ月間提供されます。
+
+
+[cols="1, 1, 1, 1"]
+|===
+| バージョン | フルサポート | 限定サポート | セルフサポート 
+
+
+ a| 
+link:https://docs.netapp.com/us-en/trident/index.html["24.06"^]
+| 2025年6月 | 2026年6月 | 2027年6月 
+
+
+ a| 
+link:https://docs.netapp.com/us-en/trident/index.html["24.02"^]
+| 2025年2月 | 2026年2月 | 2027年2月 
+
+
+ a| 
+link:https://docs.netapp.com/us-en/trident-2310/index.html["23.10"^]
+| 2024年10月 | 2025年10月 | 2026年10月 
+
+
+ a| 
+link:https://docs.netapp.com/us-en/trident-2307/index.html["23.07"^]
+| 2024年7月 | 2025年7月 | 2026年7月 
+
+
+ a| 
+link:https://docs.netapp.com/us-en/trident-2304/index.html["23.04"^]
+| -- | 2025年4月 | 2026年4月 
+
+
+ a| 
+link:https://docs.netapp.com/us-en/trident-2301/index.html["23.01"^]
+| -- | 2025年1月 | 2026年1月 
+
+
+ a| 
+link:https://docs.netapp.com/us-en/trident-2210/index.html["22.10"^]
+| -- | 2024年10月 | 2025年10月 
+
+
+ a| 
+link:https://docs.netapp.com/us-en/trident-2207/index.html["22.07"^]
+| -- | 2024年7月 | 2025年7月 
+
+
+ a| 
+link:https://docs.netapp.com/us-en/trident-2204/index.html["22.04"^]
+| -- | -- | 2025年4月 
+
+
+ a| 
+link:https://docs.netapp.com/us-en/trident-2201/index.html["22.01"^]
+| -- | -- | 2025年1月 
+
+
+ a| 
+link:https://docs.netapp.com/us-en/trident-2110/index.html["21.10"^]
+| -- | -- | 2024年10月 
+|===
+
+
+== セルフサポート
+
+トラブルシューティング記事の包括的なリストについては、を参照してください https://kb.netapp.com/Advice_and_Troubleshooting/Cloud_Services/Trident_Kubernetes["ネットアップナレッジベース（ログインが必要）"^]。また、Astraに関連する問題のトラブルシューティングに関する情報も確認できます https://kb.netapp.com/Advice_and_Troubleshooting/Cloud_Services/Astra["ここをクリック"^]。
+
+
+
+== コミュニティサポート
+
+ネットアップのAstraには、コンテナユーザ（Astra Trident開発者を含む）の活発なパブリックコミュニティがありlink:https://discord.gg/NetApp["チャネルを外します"^]ます。プロジェクトに関する一般的な質問をしたり、同じような気のある同僚と関連するトピックについて話し合うのには、この場所が最適です。
+
+
+
+== NetAppテクニカルサポート
+
+Astra Tridentに関するサポートが必要な場合は、を使用してサポートバンドルを作成し `tridentctl logs -a -n trident`、に送信します `NetApp Support <Getting Help>`。
+
+
+
+== 詳細情報
+
+* link:https://cloud.netapp.com/blog/topic/astra["Astra ブログ"^]
+* link:https://netapp.io/persistent-storage-provisioner-for-kubernetes/["Astra Trident のブログ"^]
+* link:https://cloud.netapp.com/kubernetes-hub["Kubernetes ハブ"^]
+* link:https://netapp.io/["netapp.io のコマンドです"^]
+

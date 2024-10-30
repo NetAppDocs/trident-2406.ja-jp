@@ -1,0 +1,34 @@
+---
+sidebar: sidebar 
+permalink: trident-managing-k8s/upgrade-tridentctl.html 
+keywords: upgrade, trident, methods, operator, tridentctl, helm 
+summary: 'を使用して、既存のAstra Tridentインストールを簡単にアップグレードできます `tridentctl`。' 
+---
+= tridentctl を使用してアップグレードします
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+を使用して、既存のAstra Tridentインストールを簡単にアップグレードできます `tridentctl`。
+
+.タスクの内容
+Astra Trident のアンインストールと再インストールはアップグレードとして機能します。Trident をアンインストールしても、 Astra Trident 環境で使用されている Persistent Volume Claim （ PVC ；永続的ボリューム要求）と Persistent Volume （ PV ；永続的ボリューム）は削除されません。Astra Trident がオフラインの間は、すでにプロビジョニング済みの PVS を引き続き使用でき、 Astra Trident は、オンラインに戻った時点で作成された PVC に対してボリュームをプロビジョニングします。
+
+.開始する前に
+を使用してアップグレードする前に `tridentctl`を参照link:upgrade-trident.html#select-an-upgrade-method["アップグレード方法を選択します"]
+
+.手順
+. のアンインストールコマンドを実行し `tridentctl`て、Astra Tridentに関連付けられているすべてのリソース（CRDと関連オブジェクトを除く）を削除します。
++
+[listing]
+----
+./tridentctl uninstall -n <namespace>
+----
+. Astra Tridentを再インストールします。を参照してください link:../trident-get-started/kubernetes-deploy-tridentctl.html["tridentctl を使用して Astra Trident をインストールします"]。
+
+
+
+IMPORTANT: アップグレードプロセスを中断しないでください。インストーラが完了するまで実行されることを確認します。
