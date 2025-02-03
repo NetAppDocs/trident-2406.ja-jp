@@ -16,3 +16,5 @@ entries:
     url: "/trident-reco/security-reco.html"
   - title: Linux Unified Key Setup（LUKS；統合キーセットアップ）
     url: "/trident-reco/security-luks.html"
+  - title: 転送中のKerberos暗号化の設定
+    url: "/trident-reco/configure-inflight-kerberos-encryption.html"

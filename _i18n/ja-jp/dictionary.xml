@@ -4259,4 +4259,260 @@
   <block id="4f9bffbf1ddd667b6d18ee5fe3bc3389" category="paragraph"><block ref="3428bfd6b9aff85ad104616c57d9e301" prefix="" category="inline-code"></block><block ref="21c6b99e1b958da23b23c0373944c626" prefix=" " category="inline-code"></block> （専用バージョンを使用）</block>
   <block id="d7cbf82bbbafb530fdf4ff891b9d305d" category="list-text">前の手順の出力でupdate availableで返されたバージョンにアドオンを更新します。<block ref="7517f28d87e3e3f5f51c7054bcfb6847" prefix=" " category="inline-code"></block></block>
   <block id="844c1d7ef01df888c2eaad6c7c2913c1" category="paragraph"><block ref="1e4bc555b90c0333c8626cc7405bd1f8" prefix="" category="inline-code"></block></block>
+  <block id="67fc69d0bf35fe0124a1937122bf3aec" category="summary">Astra Controlとストレージバックエンドの間のトラフィックを保護するように暗号化を設定できます。</block>
+  <block id="4d7f45f93965eed03fcd71fbeed6d2a8" category="doc">転送中のKerberos暗号化の設定</block>
+  <block id="876580b79932af82226561f24b11688f" category="paragraph">Astra Control Provisionerを使用すると、管理対象クラスタとストレージバックエンドの間のトラフィックの暗号化を有効にすることで、データアクセスセキュリティを強化できます。</block>
+  <block id="05deabe68807f95ec441eca5245eaab0" category="paragraph">Astra Control Provisionerは、Red Hat OpenShiftおよびアップストリームのKubernetesクラスタからオンプレミスのONTAPボリュームへのNFSv3およびNFSv4接続でKerberos暗号化をサポートします。</block>
+  <block id="0a710c309a5f6dc65b056833a5208521" category="paragraph">作成、削除、サイズ変更、スナップショット、クローン、 読み取り専用のクローンを作成し、NFS暗号化を使用するボリュームをインポートします。</block>
+  <block id="0b660ae85d215a9e70834a4e745fe95b" category="section-title">オンプレミスのONTAPボリュームで転送中のKerberos暗号化を設定</block>
+  <block id="7c139dfc85d7e4497d2109fff4d0893f" category="paragraph">管理対象クラスタとオンプレミスのONTAPストレージバックエンドの間のストレージトラフィックに対してKerberos暗号化を有効にすることができます。</block>
+  <block id="4733fee3df7d4e6e25e68e5ad7d2adf0" category="admonition">オンプレミスのONTAPストレージバックエンドを使用するNFSトラフィックのKerberos暗号化は、ストレージドライバを使用した場合にのみサポートされ<block ref="8321592ce24c8a122ecf26a63cfca407" prefix=" " category="inline-code"></block> ます。</block>
+  <block id="6e2b60d9ef0eed2895dd36450104f761" category="inline-link-macro">Astra Control Provisionerを有効にしました</block>
+  <block id="8758464d392ac54bf4ac49ade2ca62e2" category="list-text">管理対象クラスタにがあることを確認し <block ref="1c2b748ae79d0dfb94bb1d936ef06f9a" category="inline-link-macro-rx"></block> ます。</block>
+  <block id="0ff02d27ae5cac1a12c6c403fd55443c" category="list-text">ユーティリティにアクセスできることを確認し<block ref="c67fd1b99934afa248dfeb285a9a4191" prefix=" " category="inline-code"></block> ます。</block>
+  <block id="bef890ed7cc869346d4b483cd3e3ab00" category="list-text">ONTAPストレージバックエンドへの管理者アクセス権があることを確認します。</block>
+  <block id="160b05c1b85ce34d702a3568614baec1" category="list-text">ONTAPストレージバックエンドから共有するボリュームの名前を確認しておきます。</block>
+  <block id="1a69d38f7b46901c58e85d024e87b034" category="inline-link">データLIFでKerberosを有効にする</block>
+  <block id="d4a594e9e05807f063e76ba8e5520ce8" category="list-text">NFSボリュームのKerberos暗号化をサポートするようにONTAP Storage VMを準備しておく必要があります。手順については、を参照してください<block ref="6585cfb6b510f588abb97add305c4508" category="inline-link-rx"></block> 。</block>
+  <block id="9fe985de654739fa6f48edb0d49059b4" category="inline-link">『NetApp NFSv4 Enhancements and Best Practices Guide』</block>
+  <block id="9c6a0d551d50340cca48e6cfa4355566" category="list-text">Kerberos暗号化で使用するNFSv4ボリュームが正しく設定されていることを確認します。のNetApp NFSv4ドメインの設定セクション（13ページ）を参照してください<block ref="fcbfe3012009d21ef9ba8407142f85b6" category="inline-link-rx"></block>。</block>
+  <block id="7c67bfc9153da2055f6d09209f9853c7" category="section-title">ONTAPエクスポートポリシーを追加または変更する</block>
+  <block id="3afa4a2a4546fcf1b9a361d1bff9763b" category="paragraph">既存のONTAPエクスポートポリシーにルールを追加するか、ONTAP Storage VMのルートボリュームおよびアップストリームのKubernetesクラスタと共有するONTAPボリュームに対してKerberos暗号化をサポートする新しいエクスポートポリシーを作成する必要があります。追加するエクスポートポリシールールまたは新規に作成するエクスポートポリシーでは、次のアクセスプロトコルとアクセス権限がサポートされている必要があります。</block>
+  <block id="e21233a7f0d7fedb5883aea1dfed27cf" category="paragraph-title">アクセスプロトコル</block>
+  <block id="e10f51f4d0eb1b58929237c03db4b832" category="paragraph">NFS、NFSv3、およびNFSv4の各アクセスプロトコルを使用してエクスポートポリシーを設定します。</block>
+  <block id="baedff73fdfff23f65e8b80727cd3088" category="paragraph-title">詳細を確認</block>
+  <block id="892969be437eb53b05f372cc0ae74d6c" category="paragraph">ボリュームのニーズに応じて、次の3つのバージョンのいずれかを設定できます。</block>
+  <block id="fda32d078836aa6e69a3497be5f9cdca" category="list-text">* Kerberos 5 *-（認証と暗号化）</block>
+  <block id="7d55fc39e32469f330297f866ec40e41" category="list-text">* Kerberos 5i *-（ID保護による認証と暗号化）</block>
+  <block id="ec7a355c2dad88f01ddce6c662ff507f" category="list-text">* Kerberos 5p *-（IDおよびプライバシー保護による認証および暗号化）</block>
+  <block id="43c969c43b32e3dd3bcf607fcbe4eb43" category="paragraph">適切なアクセス権限を指定してONTAPエクスポートポリシールールを設定します。たとえば、Kerberos 5i暗号化とKerberos 5p暗号化が混在しているNFSボリュームをクラスタにマウントする場合は、次のアクセス設定を使用します。</block>
+  <block id="0370275db54735bcb50d5bfce36de4e6" category="cell">読み取り専用アクセス</block>
+  <block id="dbdb2754b99a3cb725e62ef04c72ee06" category="cell">読み取り/書き込みアクセス</block>
+  <block id="a3a9521b6675631e988004e7b8ffe7b4" category="cell">スーパーユーザアクセス</block>
+  <block id="15395d0642f86c5992abbca5e56e2b29" category="cell">UNIX</block>
+  <block id="00d23a76e43b46dae9ec7aa9dcbebb32" category="cell">有効</block>
+  <block id="f22873ba6efee4accc10bd5a3d3ca9eb" category="cell">Kerberos 5i</block>
+  <block id="a98fd9001be872cb9763c171625ee881" category="cell">Kerberos 5p</block>
+  <block id="9a83b6e7170a551799b737b273fde5e1" category="paragraph">ONTAPエクスポートポリシーおよびエクスポートポリシールールの作成方法については、次のドキュメントを参照してください。</block>
+  <block id="bb53c6c29f127a298da7dd86bf00bb89" category="inline-link">エクスポートポリシーを作成する</block>
+  <block id="2065c7b470f4d228b592158785fc8c0b" category="list-text"><block ref="2065c7b470f4d228b592158785fc8c0b" category="inline-link-rx"></block></block>
+  <block id="8c47b652d31bca921bb367b0e3c5ec6d" category="inline-link">エクスポートポリシーにルールを追加する</block>
+  <block id="249db3ace916cc1363d388978a8b6c5e" category="list-text"><block ref="249db3ace916cc1363d388978a8b6c5e" category="inline-link-rx"></block></block>
+  <block id="c21c2b66c343dfe9db6298e59c2cc767" category="section-title">ストレージバックエンドの作成</block>
+  <block id="d4d4d663b462e9ebf9fa142e6c6a52d3" category="paragraph">Kerberos暗号化機能を含むAstra Control Provisionerストレージバックエンド構成を作成できます。</block>
+  <block id="0848c0a5d21711a3f8967a344553c492" category="paragraph">Kerberos暗号化を設定するストレージバックエンド構成ファイルを作成する場合は、パラメータを使用して次の3つのバージョンのKerberos暗号化のいずれかを指定でき<block ref="21f59c061af833af5de20556ce76052d" prefix=" " category="inline-code"></block> ます。</block>
+  <block id="619885da64e4ba4b0df04a00d78079b7" category="list-text"><block ref="47587c842cb0a2574a5a4c7c644b006d" prefix="" category="inline-code"></block> （認証と暗号化）</block>
+  <block id="aa734ef649b1255faccfc198980bf49a" category="list-text"><block ref="600550ee922e257041b75142ddab2319" prefix="" category="inline-code"></block> （ID保護による認証と暗号化）</block>
+  <block id="4197df0e0ac8f9480069ee1e0dc22543" category="list-text"><block ref="b148e7f5a01830ae530070588af5e9e6" prefix="" category="inline-code"></block> （IDおよびプライバシー保護による認証および暗号化）</block>
+  <block id="c99e9f5ade1b20705438ad6882d112c2" category="paragraph">Kerberosレベルを1つだけ指定してください。パラメータリストで複数のKerberos暗号化レベルを指定した場合は、最初のオプションのみが使用されます。</block>
+  <block id="926a7d5402fb3ed0da8fcd630e3a8f8c" category="list-text">管理対象クラスタで、次の例を使用してストレージバックエンド構成ファイルを作成します。括弧&lt;&gt;の値は、環境の情報で置き換えます。</block>
+  <block id="2cd636101227e18554e5c5351bf5bbe3" category="list-text">前の手順で作成した構成ファイルを使用して、バックエンドを作成します。</block>
+  <block id="3204b0a88f0c8e6cb89ef2653173ddf1" category="paragraph">ストレージクラスを作成して、Kerberos暗号化を使用してボリュームをプロビジョニングできます。</block>
+  <block id="03111bbdda72125f143e084557265c1c" category="paragraph">ストレージクラスオブジェクトを作成するときは、パラメータを使用して、次の3つのバージョンのKerberos暗号化のいずれかを指定できます<block ref="e1d3d66c5926aa7fbc3186da8f9b476b" prefix=" " category="inline-code"></block> 。</block>
+  <block id="85eee746a5d30d5149d419a3dfd2fe4e" category="list-text"><block ref="ebd2fabd7ee9d78e670334fba38c5a6b" prefix="" category="inline-code"></block> （認証と暗号化）</block>
+  <block id="24dac19871e9929a42267b538a60ebe5" category="list-text"><block ref="82f5845550ca9ab77ce797c16bd7bca1" prefix="" category="inline-code"></block> （ID保護による認証と暗号化）</block>
+  <block id="c36d9d41da2e174bfa8b3338450fb45c" category="list-text"><block ref="7a1dedb8f6c22fd4833b45267ad3b01a" prefix="" category="inline-code"></block> （IDおよびプライバシー保護による認証および暗号化）</block>
+  <block id="4a2e7c9ecf75ac18d4daec2783256280" category="paragraph">Kerberosレベルを1つだけ指定してください。パラメータリストで複数のKerberos暗号化レベルを指定した場合は、最初のオプションのみが使用されます。ストレージバックエンド構成で指定した暗号化レベルがストレージクラスオブジェクトで指定したレベルと異なる場合は、ストレージクラスオブジェクトが優先されます。</block>
+  <block id="0bae6577bb0c45b6f2d82896713df9f9" category="list-text">次の例を使用して、StorageClass Kubernetesオブジェクトを作成します。</block>
+  <block id="bd9c5e9bd5f130a6fbdbcaeb04656652" category="list-text">ストレージクラスを作成します。</block>
+  <block id="2472867b1c2b8a486fe64cfc08afeba5" category="list-text">ストレージクラスが作成されていることを確認します。</block>
+  <block id="d0848afd8553c34945705222a97a4553" category="paragraph">次のような出力が表示されます。</block>
+  <block id="0a44f30bac4e15e0464a80627bef5882" category="section-title">ボリュームのプロビジョニング</block>
+  <block id="df5d2586ae35677e5d1b74f6bf22fc4a" category="inline-link">ボリュームのプロビジョニング</block>
+  <block id="d54dd0bd4d4709e0b61979c77050c4f3" category="paragraph">ストレージバックエンドとストレージクラスを作成したら、ボリュームをプロビジョニングできるようになりました。の手順を参照してください<block ref="45693932e20b39f3b16747f62135000b" category="inline-link-rx"></block>。</block>
+  <block id="fe10ad21eb1ce607c403a8d609d5ab3e" category="section-title">Azure NetApp Filesボリュームでの転送中Kerberos暗号化の設定</block>
+  <block id="cd21e25bc313d3805456542eac624499" category="paragraph">管理対象クラスタと単一のAzure NetApp FilesストレージバックエンドまたはAzure NetApp Filesストレージバックエンドの仮想プールの間のストレージトラフィックに対してKerberos暗号化を有効にすることができます。</block>
+  <block id="bf08e3747af8cdb14b7eaf98563b8d7e" category="inline-link-macro">Astra Control Provisionerを有効にする</block>
+  <block id="6f6708d43f002178ebd42b453faca11e" category="list-text">管理対象のRed Hat OpenShiftクラスタでAstra Control Provisionerが有効になっていることを確認します。手順については、を参照してください <block ref="09bb7a105629f922c89dc5bfe800e3ad" category="inline-link-macro-rx"></block> 。</block>
+  <block id="6c32a3d0f1a665987b98dde5a0f96d7d" category="inline-link">Azure NetApp Files のドキュメント</block>
+  <block id="aa63a31f222305a4ce10d8c1020ab1fd" category="list-text">要件を確認し、の手順に従って、Kerberos暗号化用のAzure NetApp Filesストレージバックエンドの準備が完了していることを確認します。<block ref="54b351b1767d2d50eb8c87e19c20164c" category="inline-link-rx"></block></block>
+  <block id="4f07c8d51fef64025d4b746305177733" category="paragraph">Kerberos暗号化機能を含むAzure NetApp Filesストレージバックエンド構成を作成できます。</block>
+  <block id="5c6eaa8dd4c4134f6ad836e97ffdee13" category="paragraph">Kerberos暗号化を設定するストレージバックエンド構成ファイルを作成する場合は、次の2つのレベルのいずれかで適用するように定義できます。</block>
+  <block id="bc0557be41ea94e344d7ece1f311b7d4" category="list-text">フィールドを使用した* storage backend level *<block ref="6a60a6d9955ef9fce24cf4e86efed7af" prefix=" " category="inline-code"></block></block>
+  <block id="e30ee9a2b9976217a5fe28b412fe04d6" category="list-text">フィールドを使用した*仮想プールレベル*<block ref="533988f6253fcffab6270c1aafb50970" prefix=" " category="inline-code"></block></block>
+  <block id="64864cec765a0e5c421369098904873c" category="paragraph">仮想プールレベルで構成を定義する場合、ストレージクラスのラベルを使用してプールが選択されます。</block>
+  <block id="082ccae8192fda90d271d92200b3a7dd" category="paragraph">どちらのレベルでも、次の3つのバージョンのKerberos暗号化のいずれかを指定できます。</block>
+  <block id="853434fc4aabccb1e3341f56ef2a9424" category="list-text"><block ref="9ce0da43b8420d1a89f0d00da04312a2" prefix="" category="inline-code"></block> （認証と暗号化）</block>
+  <block id="44ea74e03aa9994870273996b8770ef6" category="list-text"><block ref="6bbaa5deea5e26abf8837d31bd265b6f" prefix="" category="inline-code"></block> （ID保護による認証と暗号化）</block>
+  <block id="e22427c81cd5155061fad66ed3f13f52" category="list-text"><block ref="42b55bed7d0514cd2e2189a3edc9d87b" prefix="" category="inline-code"></block> （IDおよびプライバシー保護による認証および暗号化）</block>
+  <block id="c51fc706f0eb21d747d3ff2e2bb6c38b" category="list-text">管理対象クラスタで、ストレージバックエンドを定義する必要がある場所（ストレージバックエンドレベルまたは仮想プールレベル）に応じて、次のいずれかの例を使用してストレージバックエンド構成ファイルを作成します。括弧&lt;&gt;の値は、環境の情報で置き換えます。</block>
+  <block id="d51a5db438981d465f8fecc7ecbeb054" category="open-title">ストレージバックエンドレベルの例</block>
+  <block id="83aab9b6ffc8c65b79350e009c49e5f4" category="open-title">仮想プールレベルの例</block>
+  <block id="5220375a520b7758aa31b8b43ce717fe" category="summary">Astra Control Provisionerでは、ソースボリュームとデスティネーションボリューム間のミラー関係を作成して、ディザスタリカバリ用にボリュームをレプリケートできます。</block>
+  <block id="50e2eea9ba53d70147772db1c5d25f79" category="doc">SnapMirrorによるボリュームのレプリケート</block>
+  <block id="d0182feabbbe0987e5c6aed407b4c2a7" category="paragraph">Astra Control Provisionerを使用すると、ディザスタリカバリ用にデータをレプリケートするために、一方のクラスタのソースボリュームとピアクラスタのデスティネーションボリュームの間にミラー関係を作成できます。名前空間カスタムリソース定義（CRD）を使用して、次の操作を実行できます。</block>
+  <block id="a682d8ef86abcae6c5a1db6186c5f02b" category="list-text">ボリューム（PVC）間のミラー関係を作成する</block>
+  <block id="31a8f98d3378661a5b8abf15438f0bca" category="list-text">ボリューム間のミラー関係の削除</block>
+  <block id="a6349012892be516e5729d501a9649a7" category="list-text">ミラー関係を解除する</block>
+  <block id="2597cb6d27f572bb6d7d2fd15f414795" category="list-text">災害時（フェイルオーバー）にセカンダリボリュームを昇格する</block>
+  <block id="40f7c55be912a395aed2502927d3fcfa" category="list-text">クラスタからクラスタへのアプリケーションのロスレス移行の実行（計画的なフェイルオーバーまたは移行時）</block>
+  <block id="d193cd9a2432eca22e5cf0d06dcee1e6" category="section-title">レプリケーションの前提条件</block>
+  <block id="55be807bf2be012ff44a04449cc5e8a8" category="paragraph">作業を開始する前に、次の前提条件を満たしていることを確認してください。</block>
+  <block id="3404cce75db90acf6a9d52860721a139" category="list-title">ONTAP クラスタ</block>
+  <block id="5764ffcba90184d76761806e7e8395b9" category="list-text">* Astra Control Provisioner *：ONTAPをバックエンドとして利用するソースとデスティネーションの両方のKubernetesクラスタに、Astra Control Provisionerバージョン23.10以降が必要です。</block>
+  <block id="ba84728ffba482ceb12371a53be2f636" category="inline-link">ONTAP のSnapMirrorライセンスの概要</block>
+  <block id="b677eb65f7f869d18b845725a133a8d5" category="list-text">*ライセンス*：Data Protection Bundleを使用するONTAP SnapMirror非同期ライセンスが、ソースとデスティネーションの両方のONTAPクラスタで有効になっている必要があります。詳細については、を参照してください<block ref="a7b9425cefc4a3715b38951f4b2b6b35" category="inline-link-rx"></block> 。</block>
+  <block id="5cc8ada79224d850ecd22fd22e550c47" category="list-title">ピアリング</block>
+  <block id="9fecd08b776fdfca7b33426363edf913" category="inline-link">クラスタと SVM のピアリングの概要</block>
+  <block id="02b05cdd8f0a8c426f307085cc1004f7" category="list-text">*クラスタとSVM *：ONTAPストレージバックエンドにピア関係が設定されている必要があります。詳細については、を参照してください<block ref="60333a598df416e49fbceb5a88dce370" category="inline-link-rx"></block> 。</block>
+  <block id="94ac6b3955eab183cb88ab17c91000eb" category="admonition">2つのONTAPクラスタ間のレプリケーション関係で使用されるSVM名が一意であることを確認してください。</block>
+  <block id="11b4eae81775a6d26d41d2ca42309c91" category="list-text">* Astra Control ProvisionerとSVM *：ピア関係にあるリモートSVMがデスティネーションクラスタのAstra Control Provisionerで使用可能である必要があります。</block>
+  <block id="0c5e1b5bc54261ccadd2a72af1047ded" category="list-title">サポートされるドライバ</block>
+  <block id="57601c13c06c6ac6e23efaab44ced427" category="list-text">ボリュームレプリケーションは、ONTAP-NASドライバとONTAP-SANドライバでサポートされます。</block>
+  <block id="3ce5b83f8896ef0d2e356d3972ec8898" category="section-title">ミラーPVCの作成</block>
+  <block id="427a1ab7f39ee4f2dd7a0b7e35f572da" category="paragraph">以下の手順に従って、CRDの例を使用してプライマリボリュームとセカンダリボリュームの間にミラー関係を作成します。</block>
+  <block id="4dc69f665f0d76c17a577a352dd15b25" category="list-text">プライマリKubernetesクラスタで次の手順を実行します。</block>
+  <block id="cffc5263be00a76539edeeff72190d54" category="list-text">パラメータを指定してStorageClassオブジェクトを作成し<block ref="23041ca302bab724a5a0a4ee923c745d" prefix=" " category="inline-code"></block> ます。</block>
+  <block id="f1fe26832c26eb686c85bd72da8a62f1" category="list-text">以前に作成したStorageClassを使用してPVCを作成します。</block>
+  <block id="a306778c7affcc4dd2329c7f1e9a6389" category="list-text">ローカル情報を含むMirrorRelationship CRを作成します。</block>
+  <block id="f55994c0c11fac6e31cbb70581f696f0" category="paragraph">Astra Control Provisionerは、ボリュームの内部情報とボリュームの現在のデータ保護（DP）の状態をフェッチし、MirrorRelationshipのstatusフィールドに値を入力します。</block>
+  <block id="7e36329a511f28054ceb0cb2aba7de3a" category="list-text">TridentMirrorRelationship CRを取得して、PVCの内部名とSVMを取得します。</block>
+  <block id="ce01c03f932076e82348fc5aaefacc7d" category="list-text">セカンダリKubernetesクラスタで次の手順を実行します。</block>
+  <block id="dbe7fac150e57be9bc0d8e046792f4c3" category="list-text">trident.netapp.io/replication: trueパラメータを使用してStorageClassを作成します。</block>
+  <block id="01d68e0f9630c032dc8a33358e46e65b" category="list-text">デスティネーションとソースの情報を含むMirrorRelationship CRを作成します。</block>
+  <block id="960441627a9e57f3614bc5e5fce9a5ff" category="paragraph">Astra Control Provisionerは、設定された関係ポリシー名（ONTAPの場合はデフォルト）を使用してSnapMirror関係を作成し、初期化します。</block>
+  <block id="4ba5d2a91c95149a7ad924ebd0d9503d" category="list-text">セカンダリ（SnapMirrorデスティネーション）として機能するStorageClassを作成してPVCを作成します。</block>
+  <block id="efe874c809f0fe07e9ccbe31c010017a" category="paragraph">Astra Control ProvisionerはTridentMirrorRelationship CRDを確認し、関係が存在しない場合はボリュームの作成に失敗します。関係が存在する場合は、Astra Control Provisionerによって、新しいFlexVolがMirrorRelationshipで定義されているリモートSVMとピア関係にあるSVMに配置されます。</block>
+  <block id="e71d1a5cbaac30e63ed507e4b62c705f" category="section-title">ボリュームレプリケーションの状態</block>
+  <block id="35a5ab9faaa73d6bfb24393f7b676624" category="paragraph">Trident Mirror Relationship（TMR）は、PVC間のレプリケーション関係の一端を表すCRDです。デスティネーションTMRの状態はで、Astra Control Provisionerに必要な状態が示されます。宛先TMRの状態は次のとおりです。</block>
+  <block id="546afd3b22376f948ae8d790e441d7da" category="list-text">*確立済み*：ローカルPVCはミラー関係のデスティネーションボリュームであり、これは新しい関係です。</block>
+  <block id="724cfb5ec8bac42a80699bb79c4eccb9" category="list-text">*昇格*：ローカルPVCはReadWriteでマウント可能であり、ミラー関係は現在有効ではありません。</block>
+  <block id="d323366aa32e60d08a0f93bda543af47" category="list-text">* reestablished *：ローカルPVCはミラー関係のデスティネーションボリュームであり、以前はそのミラー関係に含まれていました。</block>
+  <block id="4c3cd5b62a43e82e03fffa6b238ed918" category="list-text">デスティネーションボリュームはデスティネーションボリュームの内容を上書きするため、ソースボリュームとの関係が確立されたことがある場合は、reestablished状態を使用する必要があります。</block>
+  <block id="b2e7dc07859cd924ca5706b299986e57" category="list-text">ボリュームが以前にソースとの関係になかった場合、再確立状態は失敗します。</block>
+  <block id="93f9c6ccc7d85e709509db31891ae5eb" category="section-title">計画外フェールオーバー時にセカンダリPVCを昇格する</block>
+  <block id="4a76c8d930ec18b5aedc26b5d8e5246f" category="paragraph">セカンダリKubernetesクラスタで次の手順を実行します。</block>
+  <block id="78ac02218b5a9367bdcb4881538477cc" category="list-text">TridentMirrorRelationshipの_spec.state_フィールド をに更新します<block ref="1fe57d6202c7cfbb0ee344b1e0a6fb37" prefix=" " category="inline-code"></block>。</block>
+  <block id="ffe4cfc202d643b50342b93a4a11a82f" category="section-title">計画的フェイルオーバー中にセカンダリPVCを昇格</block>
+  <block id="1d60b89a076d7f30b8efdef50e842f68" category="paragraph">計画的フェイルオーバー（移行）中に、次の手順を実行してセカンダリPVCをプロモートします。</block>
+  <block id="3310d9a60c164accb7c262ab6e9fbc65" category="list-text">プライマリKubernetesクラスタでPVCのSnapshotを作成し、Snapshotが作成されるまで待ちます。</block>
+  <block id="8b17b79902950942165541a8ab704363" category="list-text">プライマリKubernetesクラスタで、SnapshotInfo CRを作成して内部の詳細を取得します。</block>
+  <block id="678346d79faaa65b2da52e6d7ddce845" category="list-text">セカンダリKubernetesクラスタで、_TridentMirrorRelationship_CRの_spec.state_フィールド を_promoted_に更新し、_spec.promotedSnapshotHandle_をSnapshotのinternalNameにします。</block>
+  <block id="7b007b14980acd66e9301e02a5670f47" category="list-text">セカンダリKubernetesクラスタで、TridentMirrorRelationshipのステータス（status.stateフィールド）がPromotedになっていることを確認します。</block>
+  <block id="f69101c0107c4bbf8f0ccc9141beb68b" category="section-title">フェイルオーバー後にミラー関係をリストアする</block>
+  <block id="9a023cbe1d3be933d8edb6228f9901ce" category="paragraph">ミラー関係をリストアする前に、新しいプライマリとして作成する側を選択します。</block>
+  <block id="1c7011adbcc0afa258396aff4f10266b" category="list-text">セカンダリKubernetesクラスタで、TridentMirrorRelationshipの_spec.remoteVolumeHandle_fieldの値が更新されていることを確認します。</block>
+  <block id="ffb25f01fda2538ae98bc0c4b4d465a6" category="list-text">セカンダリKubernetesクラスタで、TridentMirrorRelationshipの_spec.mirror_fieldをに更新します<block ref="036bbe13de7250844b100bc381b59214" prefix=" " category="inline-code"></block>。</block>
+  <block id="41a593c0bede63aac2726a18e4599087" category="section-title">その他の処理</block>
+  <block id="429ffe8f0aaccc8922acaae0bea825a8" category="paragraph">Astra Control Provisionerでは、プライマリボリュームとセカンダリボリュームに対する次の処理がサポートされます。</block>
+  <block id="253093d00b66ff2357df5085c04b2758" category="section-title">新しいセカンダリPVCへのプライマリPVCの複製</block>
+  <block id="301dcece9e67241c29ebbbac8a94274e" category="paragraph">プライマリPVCとセカンダリPVCがすでに存在していることを確認します。</block>
+  <block id="7f1c32cba6b98d1db7f3dfda1df76189" category="list-text">PersistentVolumeClaim CRDとTridentMirrorRelationship CRDを、確立されたセカンダリ（デスティネーション）クラスタから削除します。</block>
+  <block id="e655fd5342cff178f54ae5f5b2a3b7b6" category="list-text">プライマリ（ソース）クラスタからTridentMirrorRelationship CRDを削除します。</block>
+  <block id="3eb69a135044d3f308d140dccb1dbe5e" category="list-text">確立する新しいセカンダリ（デスティネーション）PVC用に、プライマリ（ソース）クラスタに新しいTridentMirrorRelationship CRDを作成します。</block>
+  <block id="92c650dfb6284b5d24ed0e83a2338fa0" category="section-title">ミラー、プライマリ、またはセカンダリPVCのサイズ変更</block>
+  <block id="66990a43216d28b5b6818b021d397574" category="paragraph">PVCは通常どおりサイズ変更できます。データ量が現在のサイズを超えると、ONTAPは自動的に宛先フレフxolを拡張します。</block>
+  <block id="4e2626fed5da19a4be8255f16a331609" category="section-title">PVCからのレプリケーションの削除</block>
+  <block id="e1abf7fa65d845d34c33d593ed070453" category="paragraph">レプリケーションを削除するには、現在のセカンダリボリュームで次のいずれかの操作を実行します。</block>
+  <block id="b3dd2c563dffb09f03c72bc16a72be62" category="list-text">セカンダリPVCのMirrorRelationshipを削除します。これにより、レプリケーション関係が解除されます。</block>
+  <block id="413ab8e64d0d4ccb3f08ef2a8653a525" category="list-text">または、spec.stateフィールドを_promoted_に更新します。</block>
+  <block id="c00cff9971607d7a0409066a0ecc3bcd" category="section-title">（以前にミラーリングされていた）PVCの削除</block>
+  <block id="21c248e83f23afe590db7c4471350f23" category="paragraph">Astra Control Provisionerは、ボリュームの削除を試行する前に、レプリケートされたPVCをチェックし、レプリケーション関係を解放します。</block>
+  <block id="8ec9c60105332c1be8facc42b496e14b" category="section-title">TMRの削除</block>
+  <block id="b4d20a51885b1a7645c486448d720b7e" category="paragraph">ミラー関係の一方のTMRを削除すると、Astra Control Provisionerが削除を完了する前に、残りのTMRが_promoted_stateに移行します。削除対象として選択したTMRがすでに_promoted_stateである場合は、既存のミラー関係は存在せず、TMRが削除され、Astra Control ProvisionerがローカルPVCを_ReadWrite_に昇格します。この削除により、ONTAP内のローカルボリュームのSnapMirrorメタデータが解放されます。このボリュームを今後ミラー関係で使用する場合は、新しいミラー関係を作成するときに、レプリケーション状態が_established_volumeである新しいTMRを使用する必要があります。</block>
+  <block id="d41660149eb8930ad76a1dfe3dc5f2e3" category="section-title">ONTAPがオンラインのときにミラー関係を更新</block>
+  <block id="7079164c5ba86439b0719782591106dd" category="paragraph">ミラー関係は、確立後にいつでも更新できます。フィールドまたはフィールドを使用して関係を更新できます<block ref="abb3a949c6d70e3e5d92f4ad2bf143a3" prefix=" " category="inline-code"></block><block ref="ff0b4e3d4dfe8f6074b6943947345d4d" prefix=" " category="inline-code"></block> 。デスティネーションボリュームを通常のReadWriteボリュームに昇格する場合は、_promotedSnapshotHandle_を使用して、現在のボリュームのリストア先となる特定のSnapshotを指定できます。</block>
+  <block id="4eecab048a7c90cfb92e0f04884686e8" category="section-title">ONTAPがオフラインの場合にミラー関係を更新</block>
+  <block id="e3b68b1c19a14af5fcb94e147290aec6" category="paragraph">CRDを使用すると、Astra ControlからONTAPクラスタに直接接続せずにSnapMirror更新を実行できます。次のTridentActionMirrorUpdateの形式例を参照してください。</block>
+  <block id="bc08468157c4a9e3a30eed7ba64cc309" category="paragraph"><block ref="1f9dfae8a369525bce4996df40963532" prefix="" category="inline-code"></block> TridentActionMirrorUpdate CRDの状態を反映します。_Succeeded_、_In Progress_、_Failed_のいずれかの値を指定できます。</block>
+  <block id="261f0b7f37f0dd290043aab033357d32" category="summary">Astra Control Provisionerを有効にして、高度なストレージプロビジョニングおよび管理機能にアクセスします。</block>
+  <block id="372270db22900d45998a077917ef04e1" category="paragraph">Tridentバージョン23.10以降には、Astra Control Provisionerを使用するオプションが用意されています。このオプションを使用すると、ライセンスを取得したAstra Controlユーザは、高度なストレージプロビジョニング機能にアクセスできます。Astra Control Provisionerは、Astra Trident CSIベースの標準機能に加えて、この拡張機能を提供します。この手順を使用して、Astra Control Provisionerを有効にしてインストールできます。</block>
+  <block id="fe562808e3d8ddc1360f041ac9ecb065" category="paragraph">Astra Control Serviceのサブスクリプションには、Astra Control Provisionerの使用ライセンスが自動的に含まれます。</block>
+  <block id="f2e4c52f80f28c72fda2741d6bbe571d" category="paragraph">今後のAstra Controlの更新では、Astra Control ProvisionerがAstra Tridentの代わりにストレージプロビジョニングツールおよびオーケストレータとして使用され、Astra Controlでは必須となります。そのため、Astra ControlのユーザはAstra Control Provisionerを有効にすることを強く推奨します。Astra Tridentは引き続きオープンソースであり、NetAppの新しいCSIやその他の機能でリリース、メンテナンス、サポート、更新されます。</block>
+  <block id="ef7cd57a49dea042053eb666f78bd5b8" category="paragraph-title">Astra Control Provisionerを有効にする必要があるかどうかを確認する方法を教えてください。</block>
+  <block id="4a78505266dc87d60e1a9c0e6055a555" category="inline-link-macro">Astra Controlへのクラスタの追加</block>
+  <block id="d714811f6da2ed431b6eca95b73f5d45" category="paragraph">Astra TridentがインストールされていないクラスタをAstra Control Serviceに追加すると、そのクラスタはとマークされ<block ref="4358876405775b10c44268aeeeec5f50" prefix=" " category="inline-code"></block>ます。設定が完了すると <block ref="75139e2f1b4db9a393ec7ec4bdabdbe4" category="inline-link-macro-rx"></block>、Astra Control Provisionerが自動的に有効になります。</block>
+  <block id="5d7a456d65366314253c7e21aba42172" category="paragraph">クラスタがマークされていない場合は<block ref="4358876405775b10c44268aeeeec5f50" prefix=" " category="inline-code"></block>、次のいずれかの理由でマークされ<block ref="452b2caa4d3425293734c7cc9206a4b3" prefix=" " category="inline-code"></block> ます。</block>
+  <block id="9585e5b63f95bef1b4fd569541c78342" category="list-text">古いバージョンのAstra Tridentを使用している</block>
+  <block id="87c76fd90e61cbd3116a0099aca89325" category="list-text">Provisionerオプションが有効になっていないAstra Trident 23.10を使用している</block>
+  <block id="eaf1911fc60b6d69a319ebdf0480e0ca" category="list-text">このクラスタタイプでは自動有効化が許可されていません</block>
+  <block id="1fbfdc858b0f52a228444f0fd80e23ea" category="paragraph">ケースの場合<block ref="452b2caa4d3425293734c7cc9206a4b3" prefix=" " category="inline-code"></block> は、以下の手順に従ってクラスタのAstra Control Provisionerを手動で有効にしてください。</block>
+  <block id="6a45b1d4132918a64c028520724d18e3" category="inline-image-macro">クラスタの追加ワークフローにおけるクラスタ参加資格を示すスクリーンショット</block>
+  <block id="057afae3fe65d4f24b79bd50d34734b1" category="paragraph"><block ref="057afae3fe65d4f24b79bd50d34734b1" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="7753d368684bfc31807afc2b7f3cd9c0" category="paragraph-title">Astra Control Provisionerを有効にする前に</block>
+  <block id="0360a2e5fb08211931ade5b67746abd1" category="paragraph">Astra Control Provisionerが設定されていないAstra Tridentをすでに使用していて、Astra Control Provisionerを有効にする場合は、まず次の手順を実行します。</block>
+  <block id="fa11ed24405872fcaff3d72114365e10" category="list-text">* Astra Tridentがインストールされている場合は、バージョンが4リリース期間内であることを確認してください*：Astra Tridentがバージョン24.02の4リリース期間内であれば、Astra Control Provisionerを使用してAstra Trident 24.02への直接アップグレードを実行できます。たとえば、Astra Trident 23.04から24.02に直接アップグレードできます。</block>
+  <block id="513c5f0b4153f3c855edd085e129578d" category="list-text">*クラスタにAMD64システムアーキテクチャがあることを確認する*：Astra Control ProvisionerイメージはAMD64とARM64の両方のCPUアーキテクチャで提供されますが、Astra ControlでサポートされるのはAMD64のみです。</block>
+  <block id="cc74ae067ae4451424c2712fd0b0a766" category="list-text">NetApp Astra Controlイメージのレジストリにアクセスします。</block>
+  <block id="f16793904b509a3f7a260653784d0c7b" category="list-text">Astra Control Service UIにログオンし、Astra ControlアカウントIDを記録します。</block>
+  <block id="8cbb6fb4fc8e72b38ebb357b93aac0e6" category="list-text">ページの右上にある図のアイコンを選択します。</block>
+  <block id="28478864077d4a55fa88e064f317cc13" category="list-text">[API access*]を選択します。</block>
+  <block id="054eff009cdf03269a420a2370e7dea5" category="list-text">アカウントIDを書き留めます。</block>
+  <block id="247c4bd908bc1de2fd5a809200d877d2" category="list-text">同じページから* APIトークンの生成*を選択し、APIトークン文字列をクリップボードにコピーしてエディターに保存します。</block>
+  <block id="98720da814dca1d713a7ea34c223cc71" category="list-text">任意の方法でAstra Controlレジストリにログインします。</block>
+  <block id="cbad356d2a2c08e20ea2766c2d78305f" category="inline-xref">次のセクション</block>
+  <block id="bc50f89e7547553ce82affde0adc4c76" category="list-text">(カスタムレジストリのみ)イメージをカスタムレジストリに移動するには、次の手順に従います。レジストリを使用していない場合は、のTrident Operatorの手順に従います <block ref="d433543a9de56c735bd2827329689b0d" category="inline-xref-macro-rx"></block>。</block>
+  <block id="be1ad1396eeb1a14ec670f22fa8db431" category="admonition">次のコマンドには、Dockerの代わりにPodmanを使用できます。Windows環境を使用している場合は、PowerShellを推奨します。</block>
+  <block id="dfd1625b65bec1b019b2006f2a2d6f7f" category="list-text">Astra Control Provisionerのイメージをレジストリから取得します。</block>
+  <block id="e6fa19c87424a75415bf86154af17fd6" category="admonition">プルされたイメージは複数のプラットフォームをサポートせず、Linux AMD64など、イメージをプルしたホストと同じプラットフォームのみをサポートします。</block>
+  <block id="81eeab9506186e2dca8faefa78d54067" category="paragraph">例：</block>
+  <block id="2bd126572bba3a2e960ce1c5f2a946bf" category="list-text">画像にタグを付けます。</block>
+  <block id="1bfe2fd1955082292d7e5903ef66a782" category="list-text">イメージをカスタムレジストリにプッシュします。</block>
+  <block id="91c18a5dec9cf1fbb20ffffd101409cd" category="open-title">クレーン</block>
+  <block id="1165b577af138b2a4ee1e0d044eea398" category="list-text">Astra Control Provisionerのマニフェストをカスタムレジストリにコピーします。</block>
+  <block id="b948a23f0cbc4ea95e165a5489a3b7ce" category="inline-link">オペレータ（手動またはHelmを使用）または&lt;block ref="c67fd1b99934afa248dfeb285a9a4191" prefix="" category="inline-code'/&gt;</block>
+  <block id="55b03f72140649802821ee27f611f93d" category="list-text">元のAstra Tridentインストール方法でを使用していたかどうかを確認します<block ref="a1a09c66ad6b9d6162d6a0a2aaef123f" category="inline-link-rx"></block>。</block>
+  <block id="635815058628a337f65c0953162ac32e" category="list-text">以前使用したインストール方法を使用して、Astra TridentでAstra Control Provisionerを有効にします。</block>
+  <block id="df0a28182823b029a1d84bec05a7726e" category="open-title">Astra Trident運用者</block>
+  <block id="b88c081e2a4b249f94292c6f7bf16bdc" category="inline-link">Astra Tridentインストーラをダウンロードして展開</block>
+  <block id="f1f44f407a364d092b4a3b446d6593b5" category="list-text"><block ref="5512264baa78f7d10bb082092407833c" category="inline-link-rx"></block>です。</block>
+  <block id="b53ea1f6729ee2c1c5dc303c5e9bb360" category="list-text">Astra Tridentをまだインストールしていない場合、または元のAstra Trident環境からオペレータを削除した場合は、次の手順を実行します。</block>
+  <block id="1802fc07d2de18110ae52621540f337e" category="list-text">CRDを作成します。</block>
+  <block id="b19df824e7baecb971d0fdd39542c6d6" category="list-text">Tridentネームスペースを作成 <block ref="a40796e67d7096bdb1a461d9369987ae" prefix="(" category="inline-code"></block>）またはTridentネームスペースが残っていることを確認し <block ref="929ac53a7aaa18d0ab7bfd29e3b89c45" prefix="(" category="inline-code"></block>ます。ネームスペースが削除されている場合は、もう一度作成します。</block>
+  <block id="2ef8c3c36d9188d9ee49c78edd817912" category="list-text">Astra Tridentを24.06.0に更新：</block>
+  <block id="84b3a17dd4da0cadee9516d2c742e8e1" category="admonition">クラスタでKubernetes 1.24以前を実行している場合は、を使用します<block ref="bd2cc8575fe69c7f775292759380c838" prefix=" " category="inline-code"></block>。クラスタでKubernetes 1.25以降を実行している場合は、を使用します<block ref="5a02ebff4889c2de0379a0fb10bed282" prefix=" " category="inline-code"></block>。</block>
+  <block id="4cf0920f58032b65295d4d0255354879" category="list-text">Astra Tridentが実行されていることを確認します。</block>
+  <block id="54472d1da4b0c6eadf8684e846b25dcc" category="paragraph">応答：</block>
+  <block id="70da7fdb746f99191502821d5d3b6d53" category="list-text">[pull-secrets]]シークレットを使用するレジストリがある場合は、Astra Control Provisionerイメージの取得に使用するシークレットを作成します。</block>
+  <block id="531dc1bead45003a393e1e227a07b0fa" category="list-text">TridentOrchestrator CRを編集し、次の編集を行います。</block>
+  <block id="5a3079c9cd04eea596744e2187f70142" category="list-text">Astra Tridentイメージのカスタムのレジストリの場所を設定するか、Astra Controlレジストリまたはから取得し <block ref="c063da0c4010a4b533407346a02dd83c" prefix="(" category="inline-code"></block><block ref="229b44e1a628432d62b4cedc033aedf6" prefix=" " category="inline-code"></block>ます）。</block>
+  <block id="8b1959e0a8b41248dad790a861dbfdd9" category="list-text">Astra Control Provisionerを有効にし <block ref="b146a884950a14beaf7f7c32ccceea96" prefix="(" category="inline-code"></block>ます）。</block>
+  <block id="1e402f84b3c57afa8aaf19779147556d" category="list-text">Astra Control Provisionerイメージのカスタムのレジストリの場所を設定するか、Astra Controlレジストリまたはから取得し <block ref="6fd47d0a38cf5afec555b659aaed6104" prefix="(" category="inline-code"></block><block ref="e419be77a3ebdbec678982ec1d2d40b2" prefix=" " category="inline-code"></block>ます。</block>
+  <block id="9f28a023f26c22c040e88a7f3791d0ed" category="inline-xref">画像プルシークレット</block>
+  <block id="f3a11fe989360f45110df3758e7f0641" category="list-text">この手順で以前に確立した場合は <block ref="565c9dfc4921fbeccbde323bc8a44cad" category="inline-xref-macro-rx"></block> 、ここで設定でき <block ref="bafdae7aa6abb1556ef1b0d17efe7509" prefix="(" category="inline-code"></block>ます）。前の手順で設定した名前と同じシークレット名を使用します。</block>
+  <block id="aa3ae8b6c1e4a29f9314a8bbc401330f" category="list-text">ファイルを保存して終了します。導入プロセスが自動的に開始されます。</block>
+  <block id="4f27e6f7f8f95f32f55540801c5f6db0" category="list-text">operator、deployment、およびReplicaSetsが作成されていることを確認します。</block>
+  <block id="6849b59104c35075b063cf35570fde13" category="admonition">Kubernetes クラスタには、オペレータのインスタンスが * 1 つしか存在しないようにしてください。Astra Tridentオペレータを複数の環境に導入することは避けてください。</block>
+  <block id="faba39ec34eed502aea6d805d792a9ea" category="list-text">コンテナが実行されていて、ステータスがになっていることを確認し<block ref="49c9f6c98d04c8c76aee7448fd9136ed" prefix=" " category="inline-code"></block><block ref="507c6bbca2ad57c69e89a97ee8714536" prefix=" " category="inline-code"></block><block ref="50ce33a86e6915635518e9752cf0a12f" prefix=" " category="inline-code"></block><block ref="98dd43dfae05b11befe1f140e0ec787a" prefix=" " category="inline-code"></block>ます。</block>
+  <block id="6942401e8cfb1a0fc7b82ec1dcda7d32" category="list-text"><block ref="b0e92e3807bd982cc8fd58230062a04f" category="inline-link-rx"></block>です。</block>
+  <block id="a65211330b142f51904ccfb3741cc124" category="inline-link">既存のAstra Tridentがある場合は、そのTridentをホストしているクラスタからアンインストール</block>
+  <block id="00c4331aab8ed2101088511f96b6af8e" category="list-text"><block ref="f21e19b64d79b0da0ff48729d1b28669" category="inline-link-rx"></block>です。</block>
+  <block id="005a56f182fe268e9f6977b39114eab8" category="list-text">Astra Control Provisionerを有効にしてAstra Tridentをインストール <block ref="87d6b9737ff6f9e44e3dd25c182cf495" prefix="(" category="inline-code"></block>）：</block>
+  <block id="11015cc0e053d44034684218fbb49508" category="list-text">Astra Control Provisionerが有効になっていることを確認します。</block>
+  <block id="e87cd9f9f3f0bdb5a644fb2aa2415f5b" category="list-text">Astra Trident 23.07.1以前がインストールされている場合は<block ref="956dce94688d94fac89c002857c93b5d" category="inline-link-rx"></block> 、オペレータとその他のコンポーネント。</block>
+  <block id="c35a7e0e7f42e740c64a0b6fdade1fe3" category="list-text">Kubernetesクラスタが1.24以前を実行している場合は、pspを削除します。</block>
+  <block id="02cc60ae4326121ce3bc2b5fdb24de58" category="list-text">Helmチャートを更新します。</block>
+  <block id="b0f226ab4f18ed3c3dd4ee74affdea76" category="list-text">画像を一覧表示します。</block>
+  <block id="be7552e8e2fb2ab01d08b162bf54e206" category="list-text">trident-operator 24.06.0が使用可能であることを確認します。</block>
+  <block id="70b739f3363e6b3cd5f0c896d90af9c6" category="list-text">これらの設定を含む次のいずれかのオプションを使用して<block ref="0562418e6d9a76d0dd22b2f186a2203d" prefix=" " category="inline-code"></block> 実行します。</block>
+  <block id="9fe27ee3cf7416ee3af4516cf89a2b4c" category="list-text">導入場所の名前</block>
+  <block id="8d4c721df5c5b813b86a2d1eb619c735" category="list-text">Astra Tridentバージョン</block>
+  <block id="7dba4177f42e6622145f408eb88b1cba" category="list-text">Astra Control Provisionerの名前の画像</block>
+  <block id="7b0fc32fdb3c2378c2c39008d29aaa43" category="list-text">プロビジョニングツールを有効にするフラグ</block>
+  <block id="37ee7516a84d6949e4e0bde03e129758" category="inline-link">Tridentの画像</block>
+  <block id="29e638c426512b56521aa694976562ea" category="list-text">（任意）ローカルレジストリパス。ローカルレジストリを使用している場合、は<block ref="97e5914991475a979ee93ba0d709c399" category="inline-link-rx"></block> 1つのレジストリまたは別のレジストリに配置できますが、すべてのCSIイメージは同じレジストリに配置する必要があります。</block>
+  <block id="4795c928314a82e5be360b646a3a3aac" category="list-text">Tridentネームスペース</block>
+  <block id="804c8c9903e49e8cab0717f41b883f9a" category="list-text">レジストリなしのイメージ</block>
+  <block id="3e10c4dd91af2dc1835b50343bc5fbd0" category="list-text">1つまたは複数のレジストリ内の画像</block>
+  <block id="d09a3f23170df63b9065e78b7eb80224" category="paragraph">Helmを使用したTridentの導入で問題が発生した場合は、次のコマンドを実行してAstra Tridentを完全にアンインストールします。</block>
+  <block id="3897d04922674a762953f58e38463cb0" category="inline-link">Astra TridentのCRDを完全に削除</block>
+  <block id="98709e6abe377fa2083cb4a36ba22ddc" category="paragraph">* Astra Control Provisionerを再度有効にする前に、アンインストールの一環として実行しないでください。<block ref="d47e0c203a38c85d577cb0ed29c7fad1" category="inline-link-rx"></block></block>
+  <block id="8eea62084ca7e541d918e823422bd82e" category="paragraph-title">結果</block>
+  <block id="e1e016d44c99ff12155d4c6ec97b954b" category="paragraph">Astra Control Provisionerの機能が有効になっており、実行しているバージョンで使用可能なすべての機能を使用できます。</block>
+  <block id="bfd6393303a90c7eebadedd13edf658b" category="paragraph">Astra Control Provisionerをインストールすると、Astra Control UIでプロビジョニングツールをホストしているクラスタに、フィールドではなく、現在インストールされているバージョン番号が表示され<block ref="47f79829be244bd727d1881108343390" prefix=" " category="inline-code"></block><block ref="f1112223b41fddc71fd6a626582dfb78" prefix=" " category="inline-code"></block> ます。</block>
+  <block id="b705f14969fa7c55d16aa5c0ef9c37a0" category="inline-image-macro">UIでのACPバージョンの場所を示すスクリーンショット</block>
+  <block id="298c14088e0ed4580971821ac46240ba" category="paragraph"><block ref="298c14088e0ed4580971821ac46240ba" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a368b742ba77bda413a93bc1a4d09ae3" category="inline-link">Astra Tridentのアップグレードに関するドキュメント</block>
+  <block id="38798f90f44856e877b3d5951137f166" category="list-text"><block ref="38798f90f44856e877b3d5951137f166" category="inline-link-rx"></block></block>
+  <block id="1738a6ff1f0b418ce16cf74aabdceff1" category="section-title">Snapshotからのインプレースボリュームのリストア</block>
+  <block id="b9b1d2445ee19f9cad5acde381148739" category="paragraph">Astra Control Provisionerを使用すると、（TASR）CRを使用してSnapshotからインプレースでボリュームを迅速にリストアできます<block ref="2aabb3b01d0d54317a9eeef910e001f6" prefix=" " category="inline-code"></block> 。このCRはKubernetesの必須アクションとして機能し、処理の完了後も維持されません。</block>
+  <block id="7e9a6544782dc63f584ac4ae55e567bd" category="paragraph">Astra Control Provisionerは<block ref="73a3350a1b91aeb6e2836fdf5975672c" prefix=" " category="inline-code"></block>、<block ref="3016c12c1db45f14c80c9c1731b9c26a" prefix=" " category="inline-code"></block>、<block ref="8321592ce24c8a122ecf26a63cfca407" prefix=" " category="inline-code"></block>、、<block ref="844e84da8e822b4a33c4d8188da97937" prefix=" " category="inline-code"></block><block ref="bc5779a2d33eeb1304bae57f15920cfc" prefix=" " category="inline-code"></block>、、<block ref="5935ea92cdd7d975b4e764b429f21c01" prefix=" " category="inline-code"></block>、および<block ref="c0d2a793e71b152662b3e8cd2da00620" prefix=" " category="inline-code"></block> ドライバ。</block>
+  <block id="e0bc0596a7d966cd8dab3ee0e924c9b5" category="paragraph">バインドされたPVCと使用可能なボリュームSnapshotが必要です。</block>
+  <block id="d785d18f53979794a4ef9e08d186e3c4" category="list-text">PVCステータスがバインドされていることを確認します。</block>
+  <block id="d0f2b7254060d8a37c98c1eb4289586d" category="list-text">ボリュームSnapshotを使用する準備が完了していることを確認します。</block>
+  <block id="da6aadede1bc870c9042c660fdf93f25" category="list-text">TASR CRを作成します。この例では、PVCおよびボリュームスナップショット用のCRを作成し<block ref="30520f4f96804df83914260b79f55962" prefix=" " category="inline-code"></block><block ref="06f2874897d3ec8426ec85e0ffda5544" prefix=" " category="inline-code"></block>ます。</block>
+  <block id="0c9991859e53bf37c58a2fd1233eb478" category="list-text">スナップショットからリストアするにはCRを適用します。この例では、Snapshotからリストアし<block ref="30520f4f96804df83914260b79f55962" prefix=" " category="inline-code"></block>ます。</block>
+  <block id="e932e8b67111a2dc118d7599f04cdc8b" category="paragraph">Astra Control ProvisionerがSnapshotからデータをリストアします。Snapshotのリストアステータスを確認できます。</block>
+  <block id="454c5148c2a664f37fc49833dc491272" category="list-text">ほとんどの場合、障害が発生したときにAstra Control Provisionerで処理が自動的に再試行されません。この操作を再度実行する必要があります。</block>
+  <block id="c83b74c2020dd836f5b401ecda0da78c" category="list-text">管理者アクセス権を持たないKubernetesユーザは、アプリケーションネームスペースにTASR CRを作成するために、管理者から権限を付与されなければならない場合があります。</block>
 </blocks>
