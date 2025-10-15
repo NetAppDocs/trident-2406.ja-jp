@@ -804,13 +804,11 @@
   <block id="822293db528ee892466bd05ecce74b14" category="section-title">Astra Tridentに関する重要な情報</block>
   <block id="d883ab5f686800bc89cab8e6bd776c10" category="paragraph">* Astra Tridentに関する次の重要な情報をお読みください。*</block>
   <block id="92b6d6e1b0bf78702d88ede445c4256f" category="example-title">&lt;strong&gt; ：Trident &lt;/strong&gt; に関する重要な情報</block>
-  <block id="a0deacb8333950a84bc0c07161a5ec2e" category="list-text">Astra TridentでKubernetes 1.31がサポートされるようになりました。Kubernetesをアップグレードする前にAstra Tridentをアップグレードしてください。</block>
   <block id="7416271d47db3d82227ab2164e43c75c" category="list-text">Astra Tridentでは、SAN環境でのマルチパス構成の使用が厳密に実施されます。multipath.confファイルの推奨値はです<block ref="db729c5c8df447087e5a84b961df14f6" prefix=" " category="inline-code"></block>。</block>
   <block id="0acb661700c6422ee3bfc29c43c715c6" category="paragraph">マルチパス以外の構成を使用するか、multipath.confファイルにまたは<block ref="e82e6d155396541f07f7347c984444ea" prefix=" " category="inline-code"></block>の値を使用する<block ref="a3a1d5b95e345a3db24a5a30e349f699" prefix=" " category="inline-code"></block>と、マウントが失敗します。Astra Tridentでは、2007年21.07リリースからの使用が推奨されて<block ref="db729c5c8df447087e5a84b961df14f6" prefix=" " category="inline-code"></block>います。</block>
   <block id="c777be7f669397b0a376fe32ca5cd9c3" category="section-title">サポートされるフロントエンド（オーケストレーションツール）</block>
   <block id="74aefc05d193afd5c50a0df882997656" category="paragraph">Trident Astra は、次のような複数のコンテナエンジンとオーケストレーションツールをサポート</block>
   <block id="7cc1edf2116d94e97b8f4a69079de132" category="list-text">Anthosオンプレミス（VMware）とAnthos（ベアメタル1.16）</block>
-  <block id="3494d431429bb2e868fc95f1c0b9665c" category="list-text">Kubernetes 1.24~1.31</block>
   <block id="c9db4c3d8dc7c24ea723ab5fe1e45fdb" category="list-text">OpenShift 4.10-4.16</block>
   <block id="201eb37826a33e35adff9119f25946bd" category="paragraph">Trident オペレータは、次のリリースでサポートされています。</block>
   <block id="79b3290789721c34f186b1651a42c3d4" category="paragraph">Astra Tridentは、Google Kubernetes Engine（GKE）、Amazon Elastic Kubernetes Services（EKS）、Azure Kubernetes Service（AKS）、Mirantis Kubernetes Engine（MKE）、Rancher、VMware Tanzu Portfolioなど、他のフルマネージド/自己管理型Kubernetesソリューションとも連携します。</block>
@@ -830,7 +828,6 @@
   <block id="80afba45eb055fc9bdc48c90d1debd06" category="cell">Kubernetes のバージョン</block>
   <block id="10f295a61d2a793ac8936a69cf458654" category="cell">フィーチャーゲートが必要ですか？</block>
   <block id="086e6c16e3fe8e13c336612ef636aa02" category="cell">Astra Trident</block>
-  <block id="e421e06325a1dc27ebce6f0b648866a4" category="paragraph">1.24 ~ 1.31</block>
   <block id="bafd7322c6e97d25b6299b5d6fe8920b" category="paragraph">いいえ</block>
   <block id="e830b7e4d1fb7f84600876af87cb4381" category="cell">ボリューム Snapshot</block>
   <block id="ea8ed249117e76cb53766e218fe2b7c7" category="cell">ボリューム Snapshot からの PVC</block>
@@ -861,7 +858,6 @@
   <block id="ee50d481128d1543f9945b4a4f3fbe9d" category="paragraph">エアギャップのある環境では、 Astra Trident のインストールに必要なコンテナイメージを次の表に示します。コマンドを使用し<block ref="4ebf280824868255c952dc529072ecb9" prefix=" " category="inline-code"></block>て、必要なコンテナイメージのリストを確認します。</block>
   <block id="7b5dfababf92391b5761944c63b0d3bb" category="cell">Kubernetesのバージョン</block>
   <block id="aa92c4c233bc01609d957e469736b699" category="cell">コンテナイメージ</block>
-  <block id="5e6f6bf1a3cfa3238a4162a4f0aa6baa" category="cell">v1.24.0、v1.25.0、v1.26.0、v1.27.0、v1.28.0、 v1.29.0、v1.30.0、v1.31.0</block>
   <block id="082110ded218ef5f40a2b1598733539c" category="list-text">Docker .io / NetApp / Trident：24.06.0</block>
   <block id="46eedbd0d2b0f5492c4fc15aaede92ad" category="list-text">docker.io / netapp/trident-autosupport：24.06</block>
   <block id="977df580b49e7f3346777be08dfb4bad" category="list-text">registry.k8s.io/sig-storage/csi-provisioner：v4.0.1</block>
@@ -984,7 +980,6 @@
   <block id="11ad6eeb0e6095efdbf4599d71303b0e" category="inline-link-macro">標準的な導入のプロセス</block>
   <block id="dc0316b52aa2ab6526bdaee13c162530" category="paragraph">Tridentオペレータを導入し、Helmを使用してAstra Tridentをインストールできます。このプロセスでは、環境 をインストールする際に、Astra Tridentで必要なコンテナイメージがプライベートレジストリに格納されます。プライベートイメージレジストリがない場合は、を使用し<block ref="2230544d14bc4ba0c61a5a1b2030a1d4" category="inline-link-macro-rx"></block>ます。</block>
   <block id="aeb1639e94bd68d455845850b0394f3f" category="section-title">Astra Tridentに関する重要な情報24.06</block>
-  <block id="569091f6518520ecabc37c249e96bd28" category="list-text">Astra TridentでKubernetes 1.31がサポートされるようになりました。Kubernetesをアップグレードする前にTridentをアップグレード</block>
   <block id="7b9eed191ce5e7cc8c8d1cb8cfe2d8c8" category="paragraph">マルチパス以外の構成を使用するか、multipath.confファイルにまたは<block ref="e82e6d155396541f07f7347c984444ea" prefix=" " category="inline-code"></block>の値を使用する<block ref="a3a1d5b95e345a3db24a5a30e349f699" prefix=" " category="inline-code"></block>と、マウントが失敗します。Tridentでは、21.07リリース以降での使用を推奨してい<block ref="db729c5c8df447087e5a84b961df14f6" prefix=" " category="inline-code"></block>ます。</block>
   <block id="c9ffe59301b588bbc33bb004cfd312ee" category="section-title">Tridentオペレータを導入し、Helmを使用してAstra Tridentをインストール</block>
   <block id="7d3f46589c43a64fd040e4f0e0691a86" category="inline-link-macro">Helmチャート</block>
@@ -4503,4 +4498,10 @@
   <block id="c83b74c2020dd836f5b401ecda0da78c" category="list-text">管理者アクセス権を持たないKubernetesユーザは、アプリケーションネームスペースにTASR CRを作成するために、管理者から権限を付与されなければならない場合があります。</block>
   <block id="693b87b619f70e27c565c229d7653701" category="cell">ONTAP REST API を使用するためのブーリアンパラメータ。<block ref="14d839191d1ecf387a15b5b0c802a8ae" prefix=" " category="inline-code"></block> に設定する<block ref="b326b5062b2f0e69046810717534cb09" prefix=" " category="inline-code"></block>と、Astra TridentはONTAP REST APIを使用してバックエンドと通信します。に設定する<block ref="68934a3e9455fa72420237eb05902327" prefix=" " category="inline-code"></block>と、Astra TridentはONTAP ZAPI呼び出しを使用してバックエンドと通信します。この機能にはONTAP 9.11.1以降が必要です。また、使用するONTAPログインロールには、アプリケーションへのアクセス権が必要です<block ref="a9ba4dc88fa11d44cc7c0c918d174778" prefix=" " category="inline-code"></block> 。これは、事前に定義された役割と役割によって実現され<block ref="6173aa5206484b5224450952747c7148" prefix=" " category="inline-code"></block><block ref="fdb6ba311fad29ec53069808f10ebef4" prefix=" " category="inline-code"></block> ます。Astra Trident 24.06リリースおよびONTAP 9.15.1以降では、が<block ref="14d839191d1ecf387a15b5b0c802a8ae" prefix=" " category="inline-code"></block> デフォルトでに設定されてい<block ref="b326b5062b2f0e69046810717534cb09" prefix=" " category="inline-code"></block> ます。ONTAP ZAPI呼び出しを使用するようににに変更してください。<block ref="14d839191d1ecf387a15b5b0c802a8ae" prefix=" " category="inline-code"></block><block ref="68934a3e9455fa72420237eb05902327" prefix=" " category="inline-code"></block></block>
   <block id="c04aa5120d6658f8bcc58e95867a67da" category="cell">ONTAP REST API を使用するためのブーリアンパラメータ。<block ref="14d839191d1ecf387a15b5b0c802a8ae" prefix=" " category="inline-code"></block> に設定する<block ref="b326b5062b2f0e69046810717534cb09" prefix=" " category="inline-code"></block>と、Astra TridentはONTAP REST APIを使用してバックエンドと通信します。に設定する<block ref="68934a3e9455fa72420237eb05902327" prefix=" " category="inline-code"></block>と、Astra TridentはONTAP ZAPI呼び出しを使用してバックエンドと通信します。この機能にはONTAP 9.11.1以降が必要です。また、使用するONTAPログインロールには、アプリケーションへのアクセス権が必要です<block ref="a9ba4dc88fa11d44cc7c0c918d174778" prefix=" " category="inline-code"></block> 。これは、事前に定義された役割と役割によって実現され<block ref="6173aa5206484b5224450952747c7148" prefix=" " category="inline-code"></block><block ref="fdb6ba311fad29ec53069808f10ebef4" prefix=" " category="inline-code"></block> ます。Astra Trident 24.06リリースおよびONTAP 9.15.1以降では、が<block ref="14d839191d1ecf387a15b5b0c802a8ae" prefix=" " category="inline-code"></block> デフォルトでに設定されてい<block ref="b326b5062b2f0e69046810717534cb09" prefix=" " category="inline-code"></block> ます。ONTAP ZAPI呼び出しを使用するようににに変更してください。<block ref="14d839191d1ecf387a15b5b0c802a8ae" prefix=" " category="inline-code"></block><block ref="68934a3e9455fa72420237eb05902327" prefix=" " category="inline-code"></block><block ref="14d839191d1ecf387a15b5b0c802a8ae" prefix=" " category="inline-code"></block> はNVMe/TCPに完全修飾されています。</block>
+  <block id="86b88ff1a66ea55358ae99627ffdf01c" category="list-text">Kubernetes 1.30 がAstra Tridentでサポートされるようになりました。Kubernetes をアップグレードする前にAstra Tridentをアップグレードします。</block>
+  <block id="7bcc7742161f309a6d9639847cd756b4" category="list-text">Kubernetes 1.24 - 1.30</block>
+  <block id="532b22e1372bce16aa47d735c55596cf" category="list-text">Kubernetes 1.24 - 01.30</block>
+  <block id="7c15363cb005546ae95eb8bf83c3cadd" category="paragraph">1.24 - 1.30</block>
+  <block id="88a2f4201bf0a82365ef81af5f2afeac" category="cell">v1.24.0、v1.25.0、v1.26.0、v1.27.0、v1.28.0、v1.29.0、v1.30.0</block>
+  <block id="b443358b172ce4f75319c7828483fb8b" category="list-text">Kubernetes 1.30 がAstra Tridentでサポートされるようになりました。Kubernetes をアップグレードする前にTridentをアップグレードします。</block>
 </blocks>
